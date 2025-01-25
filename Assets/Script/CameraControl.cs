@@ -1,20 +1,43 @@
 using UnityEngine;
 
+[System.Serializable]
 public class CameraController : MonoBehaviour
 {
-    public Transform topView;  // Assign the TopView empty GameObject
-    public Transform leftView; // Assign the LeftView empty GameObject
-    public Transform rightView; // Assign the RightView empty GameObject
+    [Header("Camera Views")]
+    public Transform topView;
+    public Transform leftView;
+    public Transform rightView;
+    public Transform truck;
 
-    public float moveSpeed = 5f; // Speed of the camera movement
+    [Header("Camera Settings")]
+    public float moveSpeed = 5f;
+    public float rotateSpeed = 5f;
 
-    private Transform targetPosition; // Current target position
+    private Transform targetPosition;
+    private bool isRotating = false;
 
     void Update()
     {
-        if (targetPosition != null)
+        if (Input.GetMouseButton(0))
         {
-            // Smoothly move the CameraManager to the target position
+            isRotating = true;
+            targetPosition = null;
+        }
+        else
+        {
+            isRotating = false;
+        }
+
+        if (isRotating)
+        {
+            float horizontalInput = Input.GetAxis("Mouse X");
+            float verticalInput = Input.GetAxis("Mouse Y");
+
+            transform.RotateAround(truck.position, Vector3.up, horizontalInput * rotateSpeed);
+            transform.RotateAround(truck.position, transform.right, -verticalInput * rotateSpeed);
+        }
+        else if (targetPosition != null)
+        {
             transform.position = Vector3.Lerp(transform.position, targetPosition.position, Time.deltaTime * moveSpeed);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetPosition.rotation, Time.deltaTime * moveSpeed);
         }
@@ -22,16 +45,16 @@ public class CameraController : MonoBehaviour
 
     public void MoveToTopView()
     {
-        targetPosition = topView; // Set target to TopView
+        targetPosition = topView;
     }
 
     public void MoveToLeftView()
     {
-        targetPosition = leftView; // Set target to LeftView
+        targetPosition = leftView;
     }
 
     public void MoveToRightView()
     {
-        targetPosition = rightView; // Set target to RightView
+        targetPosition = rightView;
     }
 }

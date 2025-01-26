@@ -604,11 +604,11 @@ Transform:
   m_GameObject: {fileID: 153569081}
   serializedVersion: 2
   m_LocalRotation: {x: 0.6997215, y: 0.0984808, z: -0.08098203, w: 0.7029462}
-  m_LocalPosition: {x: 14, y: 221, z: -87}
+  m_LocalPosition: {x: -158.30074, y: 135.97672, z: -151.77165}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2128315548}
   m_LocalEulerAnglesHint: {x: 88.558, y: 86.85, z: 72.268}
 --- !u!1 &185891435
 GameObject:
@@ -2180,7 +2180,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &699330760
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3989,11 +3989,11 @@ Transform:
   m_GameObject: {fileID: 1460183035}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.10467394, z: -0, w: 0.99450666}
-  m_LocalPosition: {x: -47, y: 63, z: -262}
+  m_LocalPosition: {x: -219.30074, y: -22.023285, z: -326.77167}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2128315548}
   m_LocalEulerAnglesHint: {x: 0, y: 12.017, z: 0}
 --- !u!1 &1483350496
 GameObject:
@@ -4203,7 +4203,7 @@ GameObject:
   - component: {fileID: 1506619723}
   - component: {fileID: 1506619722}
   m_Layer: 0
-  m_Name: CameraView
+  m_Name: CameraHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4235,13 +4235,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506619721}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -47, y: 63, z: -262}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -219.30074, y: -22.023285, z: -326.77167}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 461581602}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2128315548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1536331580
 GameObject:
@@ -4364,11 +4364,11 @@ Transform:
   m_GameObject: {fileID: 1572721953}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.5801974, z: -0, w: -0.81447595}
-  m_LocalPosition: {x: 209.2, y: 62.2, z: -165}
+  m_LocalPosition: {x: 36.89926, y: -22.823284, z: -229.77165}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2128315548}
   m_LocalEulerAnglesHint: {x: 0, y: 289.07098, z: 0}
 --- !u!1 &1593518290
 GameObject:
@@ -6999,6 +6999,41 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &2128315547
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2128315548}
+  m_Layer: 0
+  m_Name: Camera & View Points
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2128315548
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128315547}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 172.30074, y: 85.023285, z: 64.77165}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1506619723}
+  - {fileID: 153569082}
+  - {fileID: 1460183036}
+  - {fileID: 1572721954}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2137761670
 GameObject:
   m_ObjectHideFlags: 0
@@ -15125,12 +15160,9 @@ MeshRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 2019243951}
-  - {fileID: 1334441391}
-  - {fileID: 1938207289}
-  - {fileID: 699330763}
+  - {fileID: 2128315548}
   - {fileID: 2774220342653212676}
-  - {fileID: 1506619723}
-  - {fileID: 153569082}
-  - {fileID: 1460183036}
-  - {fileID: 1572721954}
+  - {fileID: 1334441391}
+  - {fileID: 2019243951}
+  - {fileID: 699330763}
+  - {fileID: 1938207289}

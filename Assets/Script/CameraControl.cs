@@ -5,8 +5,10 @@ public class CameraController : MonoBehaviour
 {
     [Header("Camera Views")]
     public Transform topView;
-    public Transform leftView;
-    public Transform rightView;
+    public Transform sideView;
+    public Transform backView;
+
+    [Header("Subject Vehicle")]
     public Transform truck;
 
     [Header("Camera Settings")]
@@ -48,13 +50,13 @@ public class CameraController : MonoBehaviour
         targetPosition = topView;
     }
 
-    public void MoveToLeftView()
+    public void MoveToSideView()
     {
-        targetPosition = leftView;
+        targetPosition = sideView;
     }
 
-    public void MoveToRightView()
+    public void MoveToBackView()
     {
-        targetPosition = rightView;
+        targetPosition = backView;
     }
 }

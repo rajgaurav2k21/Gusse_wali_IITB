@@ -623,7 +623,7 @@ GameObject:
   - component: {fileID: 185891438}
   - component: {fileID: 185891437}
   m_Layer: 5
-  m_Name: Right Button
+  m_Name: Back Button
   m_TagString: Untagged
   m_Icon: {fileID: 2800000, guid: 98d001ce6b3b53242911dcc3d1415f59, type: 3}
   m_NavMeshLayer: 0
@@ -704,9 +704,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d218e07e7315e243acdfcc700d01eb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonIcon: {fileID: 21300000, guid: 9ecfdd9ecd8107e479582511f5396e81, type: 3}
+  buttonIcon: {fileID: 21300000, guid: 33ef35a7308c8a645905bfc036c7c8b6, type: 3}
   buttonText: 
-  iconScale: 3.6
+  iconScale: 1.8
   textSize: 24
   autoFitContent: 1
   padding:
@@ -761,7 +761,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1506619722}
         m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
-        m_MethodName: MoveToRightView
+        m_MethodName: MoveToBackView
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1869,7 +1869,7 @@ RectTransform:
   m_GameObject: {fileID: 526305575}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.6, y: 3.6, z: 3.6}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1358581408}
@@ -1899,7 +1899,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9ecfdd9ecd8107e479582511f5396e81, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 33ef35a7308c8a645905bfc036c7c8b6, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2641,7 +2641,7 @@ RectTransform:
   m_GameObject: {fileID: 998582463}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.6, y: 3.6, z: 3.6}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1888418238}
@@ -2671,7 +2671,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9ecfdd9ecd8107e479582511f5396e81, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 33ef35a7308c8a645905bfc036c7c8b6, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -3974,7 +3974,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1460183036}
   m_Layer: 0
-  m_Name: LeftView
+  m_Name: SideView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4222,8 +4222,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topView: {fileID: 153569082}
-  leftView: {fileID: 1460183036}
-  rightView: {fileID: 1572721954}
+  sideView: {fileID: 1460183036}
+  backView: {fileID: 1572721954}
   truck: {fileID: 2774220342653212676}
   moveSpeed: 6
   rotateSpeed: 5
@@ -4349,7 +4349,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1572721954}
   m_Layer: 0
-  m_Name: RightView
+  m_Name: BackView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5329,7 +5329,7 @@ GameObject:
   - component: {fileID: 1818562386}
   - component: {fileID: 1818562385}
   m_Layer: 5
-  m_Name: Left Button
+  m_Name: Side Button
   m_TagString: Untagged
   m_Icon: {fileID: 2800000, guid: 98d001ce6b3b53242911dcc3d1415f59, type: 3}
   m_NavMeshLayer: 0
@@ -5467,7 +5467,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1506619722}
         m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
-        m_MethodName: MoveToLeftView
+        m_MethodName: MoveToSideView
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6850,7 +6850,7 @@ RectTransform:
   m_GameObject: {fileID: 2115966437}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.6, y: 3.6, z: 3.6}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1166329309}
@@ -6880,7 +6880,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9ecfdd9ecd8107e479582511f5396e81, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 33ef35a7308c8a645905bfc036c7c8b6, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

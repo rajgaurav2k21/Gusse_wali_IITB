@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class CargoUIManager : MonoBehaviour
 {
@@ -11,10 +12,13 @@ public class CargoUIManager : MonoBehaviour
     [SerializeField] private TMP_InputField weightField;
     [SerializeField] private TMP_InputField volumeField;
     [SerializeField] private TMP_InputField totalboxField;
+    [SerializeField] private TMP_InputField groupnameField;
 
     [Header("Cube in Hierarchy")]
     [SerializeField] private GameObject cube; // Reference to the cube in the hierarchy
     [SerializeField] private TMP_Text[] cubeTexts; // Array of TextMeshPro components on the cube
+    [SerializeField] private GameObject wayUpIcon; // UI Image for "This Way Up" icon
+    [SerializeField] private Toggle wayUpToggle; // Toggle button for enabling/disabling the icon
 
     private bool isCubeActive = false; // Track whether the cube is active
 
@@ -22,31 +26,35 @@ public class CargoUIManager : MonoBehaviour
     {
         InitializeUI();
         HideCube(); // Hide the cube at the start
+
+        // Ensure the icon is hidden initially
+        if (wayUpIcon != null)
+            wayUpIcon.gameObject.SetActive(false);
+
+        // Add listener for the toggle
+        if (wayUpToggle != null)
+            wayUpToggle.onValueChanged.AddListener(ToggleWayUpIcon);
     }
 
     private void InitializeUI()
     {
-        // Set Input Field Content Types for Numeric fields
-        lengthField.contentType = TMP_InputField.ContentType.IntegerNumber; // Only integer values allowed
-        widthField.contentType = TMP_InputField.ContentType.IntegerNumber;  // Only integer values allowed
-        heightField.contentType = TMP_InputField.ContentType.IntegerNumber; // Only integer values allowed
-        weightField.contentType = TMP_InputField.ContentType.DecimalNumber; // Allow decimal values for weight
+        lengthField.contentType = TMP_InputField.ContentType.IntegerNumber;
+        widthField.contentType = TMP_InputField.ContentType.IntegerNumber;
+        heightField.contentType = TMP_InputField.ContentType.IntegerNumber;
+        weightField.contentType = TMP_InputField.ContentType.DecimalNumber;
 
-        // Add listeners for real-time updates
         lengthField.onValueChanged.AddListener(OnDimensionInputChanged);
         widthField.onValueChanged.AddListener(OnDimensionInputChanged);
         heightField.onValueChanged.AddListener(OnDimensionInputChanged);
-
-        // Add listener for item number
         itemNoField.onEndEdit.AddListener(OnItemNoChanged);
 
-        // Initialize fields
         ClearFields();
     }
 
     private void ClearFields()
     {
         itemNoField.text = "";
+        groupnameField.text = "";
         lengthField.text = "0";
         widthField.text = "0";
         heightField.text = "0";
@@ -54,28 +62,31 @@ public class CargoUIManager : MonoBehaviour
         volumeField.text = "0";
         totalboxField.text = "0";
 
-        HideCube(); // Reset cube visibility when fields are cleared
-        UpdateCubeText(""); // Clear text on the cube
+        HideCube();
+        UpdateCubeText("");
+
+        // Reset toggle
+        if (wayUpToggle != null)
+            wayUpToggle.isOn = false;
     }
 
     private void OnItemNoChanged(string value)
     {
         Debug.Log($"Item No. changed to: {value}");
-        UpdateCubeText(value); // Update the text on the cube
+        UpdateCubeText(value);
     }
 
     private void OnDimensionInputChanged(string value)
     {
-        // Check if at least one dimension is non-zero to show the cube
         if (!isCubeActive &&
             (float.TryParse(lengthField.text, out float length) && length > 0 ||
              float.TryParse(widthField.text, out float width) && width > 0 ||
              float.TryParse(heightField.text, out float height) && height > 0))
         {
-            ShowCube(); // Show the cube when a dimension is entered
+            ShowCube();
         }
 
-        UpdateCubeDimensions(); // Dynamically update the cube dimensions as the user types
+        UpdateCubeDimensions();
     }
 
     private void ShowCube()
@@ -96,6 +107,10 @@ public class CargoUIManager : MonoBehaviour
             isCubeActive = false;
             Debug.Log("Cube is now hidden.");
         }
+
+        // Hide the "This Way Up" icon
+        if (wayUpIcon != null)
+            wayUpIcon.gameObject.SetActive(false);
     }
 
     private void UpdateCubeDimensions()
@@ -108,7 +123,6 @@ public class CargoUIManager : MonoBehaviour
             cube.transform.localScale = new Vector3(length, height, width);
             Debug.Log($"Cube dimensions updated: Length={length}, Height={height}, Width={width}");
 
-            // Update volume field
             float volume = length * width * height;
             volumeField.text = volume.ToString("F2");
             Debug.Log($"Volume updated: {volume}");
@@ -123,9 +137,18 @@ public class CargoUIManager : MonoBehaviour
             {
                 if (cubeText != null)
                 {
-                    cubeText.text = text; // Update text for each TextMeshPro component
+                    cubeText.text = text;
                 }
             }
+        }
+    }
+
+    private void ToggleWayUpIcon(bool isOn)
+    {
+        if (wayUpIcon != null)
+        {
+            wayUpIcon.gameObject.SetActive(isOn);
+            Debug.Log(isOn ? "This Way Up icon enabled." : "This Way Up icon disabled.");
         }
     }
 }

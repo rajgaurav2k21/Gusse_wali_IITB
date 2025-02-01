@@ -2,38 +2,62 @@ using UnityEngine;
 
 public class CargoInteractable : MonoBehaviour
 {
-    private bool isDragging = false;
-    private Vector3 offset;
-    private Camera mainCamera;
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
+    private bool isPickedUp = false;
+    
+    private Rigidbody rb;
 
     void Start()
     {
-        mainCamera = Camera.main;
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+        rb = GetComponent<Rigidbody>();
     }
 
     void OnMouseDown()
     {
-        isDragging = true;
-        offset = transform.position - GetMouseWorldPosition();
+        if (!isPickedUp) 
+        {
+            isPickedUp = true;
+            rb.isKinematic = true; // Stop physics while holding
+        }
+    }
+
+    void OnMouseDrag()
+    {
+        if (isPickedUp)
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            mousePosition.z = 5f; // Adjust depth
+            transform.position = Camera.main.ScreenToWorldPoint(mousePosition);
+        }
     }
 
     void OnMouseUp()
     {
-        isDragging = false;
-    }
-
-    void Update()
-    {
-        if (isDragging)
+        if (isPickedUp)
         {
-            transform.position = GetMouseWorldPosition() + offset;
+            isPickedUp = false;
+            rb.isKinematic = false;
+
+            // Check if placed correctly (you can add a condition for valid placement)
+            if (!IsValidPlacement()) 
+            {
+                ReturnToOriginalPosition();
+            }
         }
     }
 
-    private Vector3 GetMouseWorldPosition()
+    void ReturnToOriginalPosition()
     {
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = mainCamera.WorldToScreenPoint(transform.position).z; // Keep depth consistent
-        return mainCamera.ScreenToWorldPoint(mousePos);
+        transform.position = originalPosition;
+        transform.rotation = originalRotation;
+    }
+
+    bool IsValidPlacement()
+    {
+        // Define conditions for a valid drop (e.g., inside a truck area)
+        return transform.position.y > 1f; // Example condition
     }
 }

@@ -2,7 +2,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.IO;
 
 public class CargoUIManager : MonoBehaviour
 {
@@ -14,45 +13,32 @@ public class CargoUIManager : MonoBehaviour
     [SerializeField] private TMP_InputField weightField;
     [SerializeField] private TMP_InputField volumeField;
     [SerializeField] private TMP_InputField totalboxField;
-    [SerializeField] private TMP_InputField groupnameField;
 
     [Header("Cube in Hierarchy")]
-    [SerializeField] private GameObject cube; // Reference to the cube in the hierarchy
-    [SerializeField] private TMP_Text[] cubeTexts; // Array of TextMeshPro components on the cube
-    [SerializeField] private GameObject wayUpIcon; // UI Image for "This Way Up" icon
-    [SerializeField] private Toggle wayUpToggle; // Toggle button for enabling/disabling the icon
+    [SerializeField] private GameObject cube;
+    [SerializeField] private TMP_Text[] cubeTexts;
+    [SerializeField] private GameObject wayUpIcon;
+    [SerializeField] private Toggle wayUpToggle;
 
-    [Header("Buttons")]
-    [SerializeField] private Button addButton;
-    [SerializeField] private Button saveButton;
-    [SerializeField] private Button loadButton;
+    [Header("UI Panel Management")]
 
-    private bool isCubeActive = false; // Track whether the cube is active
-    private List<CargoData> cargoList = new List<CargoData>(); // List to store all cargo data
+    [SerializeField] private Transform panelContainer;
+    [SerializeField] private GameObject panelPrefab;
 
-    private const string FileName = "/cargoData.json"; // File name for saving and loading
+    private bool isCubeActive = false;
 
     private void Start()
     {
         InitializeUI();
-        HideCube(); // Hide the cube at the start
+        HideCube();
 
-        // Ensure the icon is hidden initially
         if (wayUpIcon != null)
             wayUpIcon.gameObject.SetActive(false);
 
-        // Add listeners
         if (wayUpToggle != null)
             wayUpToggle.onValueChanged.AddListener(ToggleWayUpIcon);
 
-        if (addButton != null)
-            addButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(AddCargoData);
-
-        if (saveButton != null)
-            saveButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(SaveCargoDataToFile);
-
-        if (loadButton != null)
-            loadButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(LoadCargoDataFromFile);
+    
     }
 
     private void InitializeUI()
@@ -73,7 +59,6 @@ public class CargoUIManager : MonoBehaviour
     private void ClearFields()
     {
         itemNoField.text = "";
-        groupnameField.text = "";
         lengthField.text = "0";
         widthField.text = "0";
         heightField.text = "0";
@@ -84,7 +69,6 @@ public class CargoUIManager : MonoBehaviour
         HideCube();
         UpdateCubeText("");
 
-        // Reset toggle
         if (wayUpToggle != null)
             wayUpToggle.isOn = false;
     }
@@ -104,7 +88,6 @@ public class CargoUIManager : MonoBehaviour
         {
             ShowCube();
         }
-
         UpdateCubeDimensions();
     }
 
@@ -126,8 +109,6 @@ public class CargoUIManager : MonoBehaviour
             isCubeActive = false;
             Debug.Log("Cube is now hidden.");
         }
-
-        // Hide the "This Way Up" icon
         if (wayUpIcon != null)
             wayUpIcon.gameObject.SetActive(false);
     }
@@ -171,90 +152,12 @@ public class CargoUIManager : MonoBehaviour
         }
     }
 
-    // Add cargo to the list
-    private void AddCargoData()
+    private void AddNewPanel()
     {
-        // Create a new CargoData object and populate it
-        CargoData cargo = new CargoData
+        if (panelPrefab != null && panelContainer != null)
         {
-            groupName = groupnameField.text,
-            itemName = itemNoField.text,
-            length= float.Parse(lengthField.text),
-            width= float.Parse(widthField.text),
-            height= float.Parse(heightField.text),
-            volume= float.Parse(volumeField.text),
-            totalbox= int.Parse(totalboxField.text),
-            weight = float.Parse(weightField.text)
-        };
-
-        // Add the cargo to the list
-        cargoList.Add(cargo);
-        Debug.Log($"Added: {cargo}");
-        ClearFields();
-    }
-
-    private void SaveCargoDataToFile()
-    {
-        string path = Path.Combine(Application.persistentDataPath, "cargoData.json");
-        string jsonData = JsonUtility.ToJson(new CargoWrapper { cargoDataList = cargoList }, true);
-
-        File.WriteAllText(path, jsonData);
-        Debug.Log($"Cargo data saved to {path}");
-    }
-
-    private void LoadCargoDataFromFile()
-    {
-        string path = Path.Combine(Application.persistentDataPath, "cargoData.json");
-
-        if (File.Exists(path))
-        {
-            string jsonData = File.ReadAllText(path);
-            CargoWrapper wrapper = JsonUtility.FromJson<CargoWrapper>(jsonData);
-
-            cargoList = wrapper.cargoDataList;
-            Debug.Log("Cargo data loaded successfully.");
-            foreach (var cargo in cargoList)
-            {
-                Debug.Log(cargo);
-            }
-        }
-        else
-        {
-            Debug.LogWarning("No save file found!");
+            Instantiate(panelPrefab, panelContainer);
+            Debug.Log("New cargo panel added.");
         }
     }
-    // Load the cargo list from a JSON file
-    private void LoadFromFile()
-    {
-        string filePath = Application.persistentDataPath + FileName;
-
-        if (File.Exists(filePath))
-        {
-            string json = File.ReadAllText(filePath);
-            CargoWrapper wrapper = JsonUtility.FromJson<CargoWrapper>(json);
-            cargoList = wrapper.cargoDataList;
-
-            Debug.Log("Data loaded successfully.");
-        }
-        else
-        {
-            Debug.LogWarning("No saved file found!");
-        }
-    }
-
-    [System.Serializable]
-   private class CargoWrapper
-{
-    public List<CargoData> cargoDataList;
-
-    // Parameterless constructor
-    public CargoWrapper() { }
-
-    // Constructor with parameters
-    public CargoWrapper(List<CargoData> list)
-    {
-        cargoDataList = list;
-    }
-}
-    
 }

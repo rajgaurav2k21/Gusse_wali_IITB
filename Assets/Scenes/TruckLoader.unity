@@ -227,36 +227,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1566185156}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &80554886 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1106438620207740, guid: fea3499422a914d40b0d94e01aae43f0, type: 3}
-  m_PrefabInstance: {fileID: 118436351}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &80554887 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224231145889084368, guid: fea3499422a914d40b0d94e01aae43f0, type: 3}
   m_PrefabInstance: {fileID: 118436351}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &80554888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 80554886}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f9f802d7c89c4f4e9709b52462f1442, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cargoPrefab: {fileID: 0}
-  truckContainer: {fileID: 0}
-  rows: 2
-  columns: 5
-  layers: 3
-  spacing: 0.1
-  loadDelay: 0.1
-  truckPartsToDisable: []
 --- !u!1001 &118436351
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -564,10 +539,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1106438620207740, guid: fea3499422a914d40b0d94e01aae43f0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 80554888}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fea3499422a914d40b0d94e01aae43f0, type: 3}
 --- !u!1 &131956259
 GameObject:
@@ -809,7 +781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cargoPrefab: {fileID: 738200788}
-  truckContainer: {fileID: 673793606}
+  truckContainer: {fileID: 2132427244}
   rows: 2
   columns: 5
   layers: 3
@@ -1046,11 +1018,6 @@ Transform:
 --- !u!1 &673793605 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3763219778723312929, guid: ef2e5632629424147967b854ec60a5a2, type: 3}
-  m_PrefabInstance: {fileID: 1641762804}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &673793606 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4644214992598291143, guid: ef2e5632629424147967b854ec60a5a2, type: 3}
   m_PrefabInstance: {fileID: 1641762804}
   m_PrefabAsset: {fileID: 0}
 --- !u!65 &673793607
@@ -1458,7 +1425,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!4 &938880027 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -2517577914908771374, guid: ef2e5632629424147967b854ec60a5a2, type: 3}
@@ -1722,6 +1689,7 @@ GameObject:
   - component: {fileID: 1566185155}
   - component: {fileID: 1566185154}
   - component: {fileID: 1566185153}
+  - component: {fileID: 1566185157}
   m_Layer: 0
   m_Name: Containers
   m_TagString: Untagged
@@ -1821,6 +1789,33 @@ Transform:
   - {fileID: 2774220342718634677}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1566185157
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1566185152}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &1641762804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2182,6 +2177,11 @@ MonoBehaviour:
 --- !u!1 &2131544135 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -114421071139916968, guid: ef2e5632629424147967b854ec60a5a2, type: 3}
+  m_PrefabInstance: {fileID: 1641762804}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2132427244 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8916055087231335519, guid: ef2e5632629424147967b854ec60a5a2, type: 3}
   m_PrefabInstance: {fileID: 1641762804}
   m_PrefabAsset: {fileID: 0}
 --- !u!23 &1398398452155432536

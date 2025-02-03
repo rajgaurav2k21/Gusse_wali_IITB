@@ -1,79 +1,62 @@
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
+using TMPro;
 using System.Collections.Generic;
 
-public class ItemManager : MonoBehaviour
+public class CargoManager : MonoBehaviour
 {
-    public GameObject itemPanelPrefab;  // Prefab for Input Panel
-    public GameObject summaryPanelPrefab; // Prefab for Summary Panel
-    public Transform panelContainer; // Parent where panels will be placed
+    [SerializeField] private GameObject cargoPanelPrefab;  // Prefab for input panel
+    [SerializeField] private Transform panelContainer;     // Parent container for input panels
+    [SerializeField] private Transform summaryContainer;   // Parent for summary text fields
+    [SerializeField] private GameObject summaryItemPrefab; // Prefab for displaying cargo summary
+    [SerializeField] private Button addButton;             // Button to add new cargo panel
+    [SerializeField] private Button saveButton;            // Button to save cargo details
 
-    private Queue<GameObject> summaryPanels = new Queue<GameObject>(); // Holds fixed number of panels
-    private const int maxPanels = 3; // Set max visible panels
+    private List<GameObject> cargoPanels = new List<GameObject>();
+    private List<string> cargoSummary = new List<string>();
 
-    void Start()
+    private void Start()
     {
-        AddNewInputPanel();
+        addButton.onClick.AddListener(AddNewCargoPanel);
+        saveButton.onClick.AddListener(SaveCargoDetails);
     }
 
-    public void AddNewInputPanel()
+    public void AddNewCargoPanel()
     {
-        GameObject newPanel = Instantiate(itemPanelPrefab, panelContainer);
-        Button addItemButton = newPanel.transform.Find("AddButton").GetComponent<Button>();
-        addItemButton.onClick.AddListener(() => ConvertToSummary(newPanel));
+        GameObject newPanel = Instantiate(cargoPanelPrefab, panelContainer);
+        cargoPanels.Add(newPanel);
     }
 
-    public void ConvertToSummary(GameObject inputPanel)
+    public void SaveCargoDetails()
     {
-        // Get input values
-        string itemNo = inputPanel.transform.Find("ItemNoInput").GetComponent<InputField>().text;
-        string dimensions = inputPanel.transform.Find("DimensionsInput").GetComponent<InputField>().text;
-        string quantity = inputPanel.transform.Find("QuantityInput").GetComponent<InputField>().text;
+        if (cargoPanels.Count == 0) return;
 
-        // Create a summary panel
-        GameObject summaryPanel = Instantiate(summaryPanelPrefab, panelContainer);
-        summaryPanel.transform.Find("ItemNoText").GetComponent<Text>().text = itemNo;
-        summaryPanel.transform.Find("DimensionsText").GetComponent<Text>().text = dimensions;
-        summaryPanel.transform.Find("QuantityText").GetComponent<Text>().text = quantity;
+        GameObject lastPanel = cargoPanels[cargoPanels.Count - 1];
+        TMP_InputField[] inputs = lastPanel.GetComponentsInChildren<TMP_InputField>();
 
-        // Setup Modify and Delete buttons
-        Button modifyButton = summaryPanel.transform.Find("ModifyButton").GetComponent<Button>();
-        Button deleteButton = summaryPanel.transform.Find("DeleteButton").GetComponent<Button>();
-
-        modifyButton.onClick.AddListener(() => ModifyItem(summaryPanel, inputPanel));
-        deleteButton.onClick.AddListener(() => DeleteItem(summaryPanel));
-
-        summaryPanels.Enqueue(summaryPanel); // Add to queue
-
-        // Remove oldest panel if limit is exceeded
-        if (summaryPanels.Count > maxPanels)
+        string cargoDetails = "";
+        foreach (TMP_InputField input in inputs)
         {
-            GameObject oldPanel = summaryPanels.Dequeue();
-            Destroy(oldPanel);
+            cargoDetails += input.text + " | ";
+            input.text = ""; // Clear input field for new entry
         }
 
-        // Remove input panel and create a new one
-        Destroy(inputPanel);
-        AddNewInputPanel();
+        cargoSummary.Add(cargoDetails);
+        UpdateSummaryPanel();
     }
 
-    public void ModifyItem(GameObject summaryPanel, GameObject newInputPanel)
+    private void UpdateSummaryPanel()
     {
-        // Populate the input panel with data from the summary panel
-        newInputPanel.transform.Find("ItemNoInput").GetComponent<InputField>().text =
-            summaryPanel.transform.Find("ItemNoText").GetComponent<Text>().text;
-        newInputPanel.transform.Find("DimensionsInput").GetComponent<InputField>().text =
-            summaryPanel.transform.Find("DimensionsText").GetComponent<Text>().text;
-        newInputPanel.transform.Find("QuantityInput").GetComponent<InputField>().text =
-            summaryPanel.transform.Find("QuantityText").GetComponent<Text>().text;
+        foreach (Transform child in summaryContainer)
+        {
+            Destroy(child.gameObject); // Clear previous summary
+        }
 
-        // Remove the summary panel
-        DeleteItem(summaryPanel);
-    }
-
-    public void DeleteItem(GameObject summaryPanel)
-    {
-        summaryPanels.Dequeue(); // Remove from queue
-        Destroy(summaryPanel);
+        foreach (string summary in cargoSummary)
+        {
+            GameObject summaryItem = Instantiate(summaryItemPrefab, summaryContainer);
+            TMP_Text summaryText = summaryItem.GetComponentInChildren<TMP_Text>();
+            summaryText.text = summary;
+        }
     }
 }

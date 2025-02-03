@@ -21,9 +21,9 @@ public class CargoUIManager : MonoBehaviour
     [SerializeField] private Toggle wayUpToggle;
 
     [Header("UI Panel Management")]
-
     [SerializeField] private Transform panelContainer;
     [SerializeField] private GameObject panelPrefab;
+    
 
     private bool isCubeActive = false;
 
@@ -38,6 +38,7 @@ public class CargoUIManager : MonoBehaviour
         if (wayUpToggle != null)
             wayUpToggle.onValueChanged.AddListener(ToggleWayUpIcon);
 
+        // Ensure the Add Panel button is assigned and functional
     
     }
 
@@ -152,12 +153,16 @@ public class CargoUIManager : MonoBehaviour
         }
     }
 
-    private void AddNewPanel()
+    public void AddNewPanel()
+{
+    if (panelPrefab != null && panelContainer != null)
     {
-        if (panelPrefab != null && panelContainer != null)
-        {
-            Instantiate(panelPrefab, panelContainer);
-            Debug.Log("New cargo panel added.");
-        }
+        Instantiate(panelPrefab, panelContainer);
+        Debug.Log("New cargo panel added.");
     }
+    else
+    {
+        Debug.LogWarning("Panel Prefab or Container is missing!");
+    }
+}
 }

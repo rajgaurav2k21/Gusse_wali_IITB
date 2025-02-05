@@ -1,62 +1,63 @@
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
 public class CargoManager : MonoBehaviour
 {
-    [SerializeField] private GameObject cargoPanelPrefab;  // Prefab for input panel
-    [SerializeField] private Transform panelContainer;     // Parent container for input panels
-    [SerializeField] private Transform summaryContainer;   // Parent for summary text fields
-    [SerializeField] private GameObject summaryItemPrefab; // Prefab for displaying cargo summary
-    [SerializeField] private Button addButton;             // Button to add new cargo panel
-    [SerializeField] private Button saveButton;            // Button to save cargo details
+    [Header("UI Input Fields")]
+    [SerializeField] private TMP_InputField itemNoField;
+    [SerializeField] private TMP_InputField lengthField;
+    [SerializeField] private TMP_InputField widthField;
+    [SerializeField] private TMP_InputField heightField;
+    [SerializeField] private TMP_InputField weightField;
+    [SerializeField] private TMP_InputField volumeField;
+    [SerializeField] private TMP_InputField totalboxField;
 
-    private List<GameObject> cargoPanels = new List<GameObject>();
-    private List<string> cargoSummary = new List<string>();
+    [Header("UI Elements")]
+    [SerializeField] private Button saveButton;
+    [SerializeField] private Transform summaryContainer;
+    [SerializeField] private GameObject summaryItemPrefab;
 
-    private void Start()
-    {
-        addButton.onClick.AddListener(AddNewCargoPanel);
-        saveButton.onClick.AddListener(SaveCargoDetails);
-    }
+   [SerializeField]  private List<CargoDetails> cargoList = new List<CargoDetails>(); // Stores cargo data
 
-    public void AddNewCargoPanel()
-    {
-        GameObject newPanel = Instantiate(cargoPanelPrefab, panelContainer);
-        cargoPanels.Add(newPanel);
-    }
+    
 
     public void SaveCargoDetails()
     {
-        if (cargoPanels.Count == 0) return;
+        // Store input data into a structured CargoDetails object
+        CargoDetails newCargo = new CargoDetails(
+            itemNoField.text,
+            lengthField.text,
+            widthField.text,
+            heightField.text,
+            weightField.text,
+            volumeField.text,
+            totalboxField.text
+        );
 
-        GameObject lastPanel = cargoPanels[cargoPanels.Count - 1];
-        TMP_InputField[] inputs = lastPanel.GetComponentsInChildren<TMP_InputField>();
+        cargoList.Add(newCargo); // Save data to the list
+        UpdateSummaryPanel(); // Refresh summary UI
 
-        string cargoDetails = "";
-        foreach (TMP_InputField input in inputs)
-        {
-            cargoDetails += input.text + " | ";
-            input.text = ""; // Clear input field for new entry
-        }
-
-        cargoSummary.Add(cargoDetails);
-        UpdateSummaryPanel();
+        // Clear input fields for next entry
+        itemNoField.text = "";
+        lengthField.text = "";
+        widthField.text = "";
+        heightField.text = "";
+        weightField.text = "";
+        volumeField.text = "";
+        totalboxField.text = "";
     }
 
     private void UpdateSummaryPanel()
     {
-        foreach (Transform child in summaryContainer)
-        {
-            Destroy(child.gameObject); // Clear previous summary
-        }
-
-        foreach (string summary in cargoSummary)
+       
+        // Display updated cargo list
+        foreach (CargoDetails cargo in cargoList)
         {
             GameObject summaryItem = Instantiate(summaryItemPrefab, summaryContainer);
             TMP_Text summaryText = summaryItem.GetComponentInChildren<TMP_Text>();
-            summaryText.text = summary;
+            summaryText.text = $"Item No: {cargo.itemNo} | Size: {cargo.length}x{cargo.width}x{cargo.height} | Weight: {cargo.weight} | Volume: {cargo.volume} | Total Boxes: {cargo.totalBox}";
         }
     }
 }

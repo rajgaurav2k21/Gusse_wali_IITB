@@ -3,74 +3,99 @@ using UnityEngine;
 
 public class CargoLoader : MonoBehaviour
 {
-    public GameObject cargoPrefab; // Assign the cargo box prefab in the Inspector
-    public Transform truckContainer; // Acts as the ground reference for cargo placement
-    public int rows = 2, columns = 5, layers = 3; // Cargo arrangement dimensions
+    public GameObject cargoPrefab; // Cargo box prefab
+    public Transform truckContainer; // Reference to truck cargo area
+    public int rows = 2, columns = 5, layers = 3;
     public float spacing = 1.2f; // Space between boxes
-    public float loadDelay = 0.1f; // Delay between loading cargo to simulate simultaneous loading effect
+    public float loadDelay = 0.1f; // Delay for simulation effect
+    public float groundOffset = 0.05f; // Prevents clipping inside surface
 
-    public GameObject[] truckPartsToDisable; // Array for truck parts to disable
+    public GameObject[] truckPartsToDisable; // Parts to disable during loading
+
+    private void Start()
+    {
+        if (truckContainer == null || cargoPrefab == null)
+        {
+            Debug.LogError("CargoPrefab or TruckContainer is not assigned.");
+        }
+    }
 
     public void OnLoadButtonClick()
     {
-        // Debug to check if truckContainer exists and is active
-        Debug.Log("Truck Container Exists? " + (truckContainer != null));
-        Debug.Log("Before loading: Truck Container Active? " + truckContainer.gameObject.activeSelf);
-
         if (truckContainer == null || cargoPrefab == null)
         {
-            Debug.LogError("CargoPrefab or TruckContainer is not assigned in the Inspector.");
+            Debug.LogError("CargoPrefab or TruckContainer is not assigned.");
             return;
         }
 
-        // Ensure truckContainer stays active
-        truckContainer.gameObject.SetActive(true);
-        truckContainer.localScale = Vector3.one; // Reset scale in case it was changed
-        truckContainer.position = Vector3.zero;  // Adjust if needed
-
-        DisableTruckParts(); // Disable specific truck parts
-        StartCoroutine(LoadCargoSimultaneously()); // Load cargo with a delay for simulation effect
-
-        Debug.Log("After loading: Truck Container Active? " + truckContainer.gameObject.activeSelf);
+        truckContainer.gameObject.SetActive(true); // Ensure truck is active
+        truckContainer.localScale = Vector3.one; // Reset scale
+        DisableTruckParts();
+        StartCoroutine(LoadCargo());
     }
 
     private void DisableTruckParts()
     {
         foreach (GameObject part in truckPartsToDisable)
         {
-            if (part != null && part != truckContainer.gameObject) // Ensure truckContainer is NOT disabled
+            if (part != null && part != truckContainer.gameObject)
             {
-                part.SetActive(false); // Disable the GameObject
-                Debug.Log($"{part.name} has been disabled.");
+                part.SetActive(false);
             }
         }
     }
 
-    private IEnumerator LoadCargoSimultaneously()
+    private IEnumerator LoadCargo()
     {
-        ClearPreviousCargo(); // Ensure the truck is empty before loading
+        ClearPreviousCargo();
 
-        for (int x = 0; x < columns; x++)
+        // Get the detected surface height of the truck
+        float baseHeight = GetTruckFloorHeight();
+
+        if (baseHeight < 0)
         {
-            for (int y = 0; y < layers; y++)
+            Debug.LogError("No valid truck surface detected for loading cargo.");
+            yield break;
+        }
+
+        // Loop through layers, rows, and columns to instantiate cargo in the correct position
+        for (int y = 0; y < layers; y++)
+        {
+            for (int x = 0; x < columns; x++)
             {
                 for (int z = 0; z < rows; z++)
                 {
-                    // Calculate the cargo position relative to truckContainer
-                    Vector3 localPosition = new Vector3(x * spacing, y * spacing, z * spacing);
+                    // Calculate position based on the truck's detected cargo area surface
+                    Vector3 worldPosition = new Vector3(
+                        truckContainer.position.x + (x * spacing),
+                        baseHeight + (y * spacing), // Start at detected surface & stack upwards
+                        truckContainer.position.z + (z * spacing)
+                    );
 
-                    // Instantiate cargo box without parenting to truckContainer
-                    GameObject box = Instantiate(cargoPrefab);
-                    box.transform.position = truckContainer.position + localPosition;
+                    // Instantiate cargo inside the truck container
+                    GameObject box = Instantiate(cargoPrefab, worldPosition, Quaternion.identity, truckContainer);
 
-                    Debug.Log($"Cargo box instantiated at: {box.transform.position}");
-
-                    yield return new WaitForSeconds(loadDelay);
+                    yield return new WaitForSeconds(loadDelay); // Add delay for effect
                 }
             }
         }
 
-        Debug.Log("Cargo loaded successfully.");
+        Debug.Log("Cargo loaded correctly.");
+    }
+
+    private float GetTruckFloorHeight()
+    {
+        RaycastHit hit;
+        Vector3 rayStart = truckContainer.position + Vector3.up * 1f; // Start ray slightly above truck bed
+
+        if (Physics.Raycast(rayStart, Vector3.down, out hit, 2f))
+        {
+            Debug.Log("Detected truck surface at: " + hit.point.y);
+            return hit.point.y + groundOffset; // Prevents clipping
+        }
+
+        Debug.LogWarning("Failed to detect truck surface, using default Y.");
+        return truckContainer.position.y; // Fallback
     }
 
     private void ClearPreviousCargo()

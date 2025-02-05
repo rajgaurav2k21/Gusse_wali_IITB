@@ -1,54 +1,57 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
+using TMPro; 
+using System.Text;
+using System.Collections;
 
-public class PromptHandler : MonoBehaviour
+public class TestScriptPost : MonoBehaviour
 {
-    // Reference to the InputField for the prompt
-    public InputField inputField;
+    public Button submitButton;
+    public TMP_InputField inputField; // Use TMP_InputField
+    public TMP_Text responseText;     // Use TMP_Text
 
-    // Reference to the Button to trigger the function
-    public Button sendButton;
-
-    // Reference to the Text element to display the response
-    public Text responseText;
+    private string apiEndpoint = "https://ff03-103-21-125-30.ngrok-free.app/start"; 
 
     void Start()
     {
-        // Ensure references are set in the Inspector
-        if (inputField == null || sendButton == null || responseText == null)
+        if (submitButton != null)
         {
-            Debug.LogError("Please assign all UI elements in the Inspector.");
-            return;
+            submitButton.onClick.AddListener(SendPostRequest);
         }
-
-        // Add a listener to the button's onClick event
-        sendButton.onClick.AddListener(OnSendButtonClicked);
+        else
+        {
+            Debug.LogError("Button is not assigned in the Inspector.");
+        }
     }
 
-    // Function to handle the button click
-    private void OnSendButtonClicked()
+    private void SendPostRequest()
     {
-        // Get the text from the input field
-        string prompt = inputField.text;
-
-        // Check if the input field is empty
-        if (string.IsNullOrEmpty(prompt))
-        {
-            responseText.text = "Please enter a prompt!";
-            return;
-        }
-
-        // Process the prompt (replace this with your logic)
-        string response = ProcessPrompt(prompt);
-
-        // Display the response above the input field
-        responseText.text = response;
+        string inputValue = inputField.text;
+        StartCoroutine(PostRequest(apiEndpoint, inputValue));
     }
 
-    // Function to process the prompt (replace with your logic)
-    private string ProcessPrompt(string prompt)
+    private IEnumerator PostRequest(string url, string bodyData)
     {
-        // For now, just return a mock response
-        return $"You entered: {prompt}\nResponse: This is a mock response.";
+        string jsonData = $"{{\"query\":\"{bodyData}\"}}";
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+
+        UnityWebRequest request = new UnityWebRequest(url, "POST")
+        {
+            uploadHandler = new UploadHandlerRaw(bodyRaw),
+            downloadHandler = new DownloadHandlerBuffer()
+        };
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            responseText.text = "Response: " + request.downloadHandler.text;
+        }
+        else
+        {
+            responseText.text = "Error: " + request.error;
+        }
     }
 }

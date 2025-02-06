@@ -5,26 +5,26 @@ public class CargoLoader : MonoBehaviour
 {
     public GameObject cargoPrefab; // Cargo box prefab
     public Transform truckContainer; // Reference to truck cargo area
+    public Transform cargoAnchorPoint; // Empty placed at a truck corner for alignment
     public int rows = 2, columns = 5, layers = 3;
     public float spacing = 1.2f; // Space between boxes
     public float loadDelay = 0.1f; // Delay for simulation effect
     public float groundOffset = 0.05f; // Prevents clipping inside surface
-
     public GameObject[] truckPartsToDisable; // Parts to disable during loading
 
     private void Start()
     {
-        if (truckContainer == null || cargoPrefab == null)
+        if (cargoAnchorPoint == null || cargoPrefab == null || truckContainer == null)
         {
-            Debug.LogError("CargoPrefab or TruckContainer is not assigned.");
+            Debug.LogError("CargoPrefab, CargoAnchorPoint, or TruckContainer is not assigned.");
         }
     }
 
     public void OnLoadButtonClick()
     {
-        if (truckContainer == null || cargoPrefab == null)
+        if (cargoAnchorPoint == null || cargoPrefab == null)
         {
-            Debug.LogError("CargoPrefab or TruckContainer is not assigned.");
+            Debug.LogError("CargoPrefab or CargoAnchorPoint is not assigned.");
             return;
         }
 
@@ -48,39 +48,27 @@ public class CargoLoader : MonoBehaviour
     private IEnumerator LoadCargo()
     {
         ClearPreviousCargo();
+        float boxHeight = cargoPrefab.GetComponent<Renderer>().bounds.size.y;
+        float truckFloorHeight = GetTruckFloorHeight();
 
-        // Get the detected surface height of the truck
-        float baseHeight = GetTruckFloorHeight();
-
-        if (baseHeight < 0)
-        {
-            Debug.LogError("No valid truck surface detected for loading cargo.");
-            yield break;
-        }
-
-        // Loop through layers, rows, and columns to instantiate cargo in the correct position
         for (int y = 0; y < layers; y++)
         {
             for (int x = 0; x < columns; x++)
             {
                 for (int z = 0; z < rows; z++)
                 {
-                    // Calculate position based on the truck's detected cargo area surface
-                    Vector3 worldPosition = new Vector3(
-                        truckContainer.position.x + (x * spacing),
-                        baseHeight + (y * spacing), // Start at detected surface & stack upwards
-                        truckContainer.position.z + (z * spacing)
+                    Vector3 localPosition = new Vector3(
+                        x * spacing,
+                        y * spacing + boxHeight / 2f,  // Adjust for pivot
+                        z * spacing
                     );
 
-                    // Instantiate cargo inside the truck container
-                    GameObject box = Instantiate(cargoPrefab, worldPosition, Quaternion.identity, truckContainer);
-
-                    yield return new WaitForSeconds(loadDelay); // Add delay for effect
+                    GameObject box = Instantiate(cargoPrefab, cargoAnchorPoint);
+                    box.transform.localPosition = localPosition; // Local to anchor
+                    yield return new WaitForSeconds(loadDelay);
                 }
             }
         }
-
-        Debug.Log("Cargo loaded correctly.");
     }
 
     private float GetTruckFloorHeight()
@@ -91,7 +79,9 @@ public class CargoLoader : MonoBehaviour
         if (Physics.Raycast(rayStart, Vector3.down, out hit, 2f))
         {
             Debug.Log("Detected truck surface at: " + hit.point.y);
-            return hit.point.y + groundOffset; // Prevents clipping
+            Debug.DrawRay(rayStart, Vector3.down * 2f, Color.red, 5f); // Debug visualization
+
+            return hit.point.y + groundOffset; // Prevent clipping
         }
 
         Debug.LogWarning("Failed to detect truck surface, using default Y.");
@@ -100,7 +90,7 @@ public class CargoLoader : MonoBehaviour
 
     private void ClearPreviousCargo()
     {
-        foreach (Transform child in truckContainer)
+        foreach (Transform child in cargoAnchorPoint)
         {
             Destroy(child.gameObject);
         }

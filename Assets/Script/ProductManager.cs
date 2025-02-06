@@ -2,16 +2,20 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+[System.Serializable]
 public class ProductManager : MonoBehaviour
 {
+    [Header("Input Fields")]
     public TMP_InputField nameInput;
     public TMP_InputField lengthInput;
     public TMP_InputField breadthInput;
     public TMP_InputField heightInput;
     public TMP_InputField weightInput;
     public TMP_InputField quantityInput;
-    public Transform listViewContent; // Parent to hold instantiated product prefabs
-    public GameObject productPrefab; // Assign Product UI Prefab in Inspector
+
+    [Header("UI Elements")]
+    public Transform listViewContent;
+    public GameObject productPrefab;
 
     public void AddProductToList()
     {

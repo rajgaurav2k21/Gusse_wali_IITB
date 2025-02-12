@@ -42,7 +42,7 @@ public class ProductManager : MonoBehaviour
         ClearInputs();
     }
 
-    void ClearInputs()
+    public void ClearInputs()
     {
         nameInput.text = "";
         lengthInput.text = "";

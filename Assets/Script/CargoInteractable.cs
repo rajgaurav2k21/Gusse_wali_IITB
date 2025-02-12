@@ -1,59 +1,92 @@
 using UnityEngine;
 
-public class DragDropCargo : MonoBehaviour
+public class CargoInteractable : MonoBehaviour
 {
-    private Vector3 originalPosition;
     private Vector3 offset;
-    private float zCoord;
+    private bool isDragging = false;
 
-    void OnMouseDown()
-    {
-        // Store the original position before dragging
-        originalPosition = transform.position;
-        
-        // Get the distance from camera to object
-        zCoord = Camera.main.WorldToScreenPoint(transform.position).z;
-        
-        // Calculate the offset between mouse position and object position
-        offset = transform.position - GetMouseWorldPos();
-    }
+    private Material originalMaterial;
+    public Material highlightMaterial;
 
-    void OnMouseDrag()
-    {
-        // Move the object while dragging
-        transform.position = GetMouseWorldPos() + offset;
-    }
+    private Renderer objectRenderer;
+    private Collider objectCollider;
 
-    void OnMouseUp()
+    private void Start()
     {
-        // Check if the cargo is placed on another object
-        if (IsOverlapping())
+        // ✅ Check and assign Renderer
+        objectRenderer = GetComponent<Renderer>();
+        if (objectRenderer == null)
         {
-            // If overlapping, reset to original position
-            transform.position = originalPosition;
+            Debug.LogError($"🚨 No Renderer found on {gameObject.name}. Make sure the cargo prefab has a MeshRenderer.");
+            return;
+        }
+        originalMaterial = objectRenderer.material;
+
+        // ✅ Check and assign Collider
+        objectCollider = GetComponent<Collider>();
+        if (objectCollider == null)
+        {
+            gameObject.AddComponent<BoxCollider>(); // Automatically add a collider if missing
+            Debug.LogWarning($"✅ BoxCollider added to {gameObject.name}.");
         }
     }
 
-    private Vector3 GetMouseWorldPos()
+    private void OnMouseEnter()
     {
-        // Get the current mouse position in world space
-        Vector3 mousePoint = Input.mousePosition;
-        mousePoint.z = zCoord; // Maintain original depth
-        return Camera.main.ScreenToWorldPoint(mousePoint);
+        if (objectRenderer != null)
+        {
+            objectRenderer.material = highlightMaterial;
+        }
+        Debug.Log($"🟢 Mouse entered: {gameObject.name}");
     }
 
-    private bool IsOverlapping()
+    private void OnMouseExit()
     {
-        // Cast a small box (or sphere) at the cargo's position to check for collisions
-        Collider[] colliders = Physics.OverlapBox(transform.position, transform.localScale / 2);
-        
-        foreach (Collider col in colliders)
+        if (objectRenderer != null)
         {
-            if (col.gameObject != gameObject) // Ignore itself
-            {
-                return true; // Collision detected
-            }
+            objectRenderer.material = originalMaterial;
         }
-        return false; // No collision
+        Debug.Log($"🔴 Mouse exited: {gameObject.name}");
+    }
+
+    private void OnMouseDown()
+    {
+        if (Camera.main == null) return;
+
+        isDragging = true;
+        offset = transform.position - GetMouseWorldPosition();
+        Debug.Log($"👆 Picked up: {gameObject.name}");
+    }
+
+    private void OnMouseDrag()
+    {
+        if (!isDragging) return;
+
+        transform.position = GetMouseWorldPosition() + offset;
+        Debug.Log($"🛠 Dragging: {gameObject.name}");
+    }
+
+    private void OnMouseUp()
+    {
+        isDragging = false;
+        SnapToGrid();
+        Debug.Log($"🛑 Released: {gameObject.name}");
+    }
+
+    private Vector3 GetMouseWorldPosition()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = Camera.main.WorldToScreenPoint(transform.position).z;
+        return Camera.main.ScreenToWorldPoint(mousePos);
+    }
+
+    private void SnapToGrid()
+    {
+        float gridSize = 1.2f; // Adjust based on cargo spacing
+        Vector3 newPosition = transform.position;
+        newPosition.x = Mathf.Round(newPosition.x / gridSize) * gridSize;
+        newPosition.y = Mathf.Round(newPosition.y / gridSize) * gridSize;
+        newPosition.z = Mathf.Round(newPosition.z / gridSize) * gridSize;
+        transform.position = newPosition;
     }
 }

@@ -1,34 +1,38 @@
 using UnityEngine;
+using System.Collections;
 
 public class CargoInteractable : MonoBehaviour
 {
     private Vector3 offset;
     private bool isDragging = false;
+    private Vector3 originalPosition;
 
-    private Material originalMaterial;
-    public Material highlightMaterial;
-
+    private Rigidbody rb;
     private Renderer objectRenderer;
-    private Collider objectCollider;
+    public Material highlightMaterial;
+    private Material originalMaterial;
+
+    private bool isSupported = true; // Checks if the box has support underneath
 
     private void Start()
     {
-        // ✅ Check and assign Renderer
+        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody>();
+            rb.isKinematic = true; // Make it kinematic while dragging
+        }
+
+        // Assign Renderer
         objectRenderer = GetComponent<Renderer>();
         if (objectRenderer == null)
         {
-            Debug.LogError($"🚨 No Renderer found on {gameObject.name}. Make sure the cargo prefab has a MeshRenderer.");
+            Debug.LogError($"No Renderer found on {gameObject.name}. Add a MeshRenderer.");
             return;
         }
         originalMaterial = objectRenderer.material;
 
-        // ✅ Check and assign Collider
-        objectCollider = GetComponent<Collider>();
-        if (objectCollider == null)
-        {
-            gameObject.AddComponent<BoxCollider>(); // Automatically add a collider if missing
-            Debug.LogWarning($"✅ BoxCollider added to {gameObject.name}.");
-        }
+        originalPosition = transform.position;
     }
 
     private void OnMouseEnter()
@@ -37,7 +41,6 @@ public class CargoInteractable : MonoBehaviour
         {
             objectRenderer.material = highlightMaterial;
         }
-        Debug.Log($"🟢 Mouse entered: {gameObject.name}");
     }
 
     private void OnMouseExit()
@@ -46,7 +49,6 @@ public class CargoInteractable : MonoBehaviour
         {
             objectRenderer.material = originalMaterial;
         }
-        Debug.Log($"🔴 Mouse exited: {gameObject.name}");
     }
 
     private void OnMouseDown()
@@ -54,8 +56,8 @@ public class CargoInteractable : MonoBehaviour
         if (Camera.main == null) return;
 
         isDragging = true;
+        rb.isKinematic = true; // Disable physics while dragging
         offset = transform.position - GetMouseWorldPosition();
-        Debug.Log($"👆 Picked up: {gameObject.name}");
     }
 
     private void OnMouseDrag()
@@ -63,14 +65,14 @@ public class CargoInteractable : MonoBehaviour
         if (!isDragging) return;
 
         transform.position = GetMouseWorldPosition() + offset;
-        Debug.Log($"🛠 Dragging: {gameObject.name}");
     }
 
     private void OnMouseUp()
     {
         isDragging = false;
-        SnapToGrid();
-        Debug.Log($"🛑 Released: {gameObject.name}");
+        rb.isKinematic = false; // Enable physics again
+
+        StartCoroutine(CheckIfFloating());
     }
 
     private Vector3 GetMouseWorldPosition()
@@ -80,13 +82,44 @@ public class CargoInteractable : MonoBehaviour
         return Camera.main.ScreenToWorldPoint(mousePos);
     }
 
-    private void SnapToGrid()
+    // ✅ Checks if the box is floating & moves it back if needed
+    private IEnumerator CheckIfFloating()
     {
-        float gridSize = 1.2f; // Adjust based on cargo spacing
-        Vector3 newPosition = transform.position;
-        newPosition.x = Mathf.Round(newPosition.x / gridSize) * gridSize;
-        newPosition.y = Mathf.Round(newPosition.y / gridSize) * gridSize;
-        newPosition.z = Mathf.Round(newPosition.z / gridSize) * gridSize;
-        transform.position = newPosition;
+        yield return new WaitForSeconds(0.5f); // Wait for physics to settle
+
+        if (!IsBoxSupported())
+        {
+            Debug.Log("Box is floating! Returning to original position.");
+            StartCoroutine(MoveBackSmoothly());
+        }
+    }
+
+    private bool IsBoxSupported()
+    {
+        RaycastHit hit;
+        // Cast a ray downwards to check for ground or other boxes
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.2f))
+        {
+            if (hit.collider.CompareTag("Cargo") || hit.collider.CompareTag("Ground"))
+            {
+                return true; // Supported by another box or ground
+            }
+        }
+        return false; // Floating in the air
+    }
+
+    private IEnumerator MoveBackSmoothly()
+    {
+        float time = 0;
+        Vector3 startPosition = transform.position;
+
+        while (time < 1)
+        {
+            transform.position = Vector3.Lerp(startPosition, originalPosition, time);
+            time += Time.deltaTime * 2;
+            yield return null;
+        }
+
+        transform.position = originalPosition;
     }
 }

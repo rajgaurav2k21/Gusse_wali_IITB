@@ -1,69 +1,35 @@
 using UnityEngine;
 using System.Collections;
 
-public class CargoInteractable : MonoBehaviour
+public class CargoBox : MonoBehaviour
 {
-    private Vector3 offset;
-    private bool isDragging = false;
-    private Vector3 originalPosition;
-
     private Rigidbody rb;
-    private Renderer objectRenderer;
-    public Material highlightMaterial;
-    private Material originalMaterial;
-
-    private bool isSupported = true; // Checks if the box has support underneath
+    private Vector3 originalPosition;
+    private bool isDragging = false;
+    private Vector3 offset;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            rb = gameObject.AddComponent<Rigidbody>();
-            rb.isKinematic = true; // Make it kinematic while dragging
-        }
-
-        // Assign Renderer
-        objectRenderer = GetComponent<Renderer>();
-        if (objectRenderer == null)
-        {
-            Debug.LogError($"No Renderer found on {gameObject.name}. Add a MeshRenderer.");
-            return;
-        }
-        originalMaterial = objectRenderer.material;
+        rb.useGravity = true;
+        rb.isKinematic = true; // Prevent physics movement when dragging
+        rb.constraints = RigidbodyConstraints.FreezeRotation; // Prevent tipping over
 
         originalPosition = transform.position;
     }
 
-    private void OnMouseEnter()
+    private void OnMouseOver()
+{
+    if (Input.GetMouseButtonDown(0)) // Left click
     {
-        if (objectRenderer != null)
-        {
-            objectRenderer.material = highlightMaterial;
-        }
-    }
-
-    private void OnMouseExit()
-    {
-        if (objectRenderer != null)
-        {
-            objectRenderer.material = originalMaterial;
-        }
-    }
-
-    private void OnMouseDown()
-    {
-        if (Camera.main == null) return;
-
         isDragging = true;
-        rb.isKinematic = true; // Disable physics while dragging
         offset = transform.position - GetMouseWorldPosition();
     }
+}
 
     private void OnMouseDrag()
     {
         if (!isDragging) return;
-
         transform.position = GetMouseWorldPosition() + offset;
     }
 
@@ -74,6 +40,24 @@ public class CargoInteractable : MonoBehaviour
 
         StartCoroutine(CheckIfFloating());
     }
+    private void OnMouseDown()
+{
+    if (Camera.main == null) return;
+
+    // Ignore container collider and interact only with cargo boxes
+    int layerMask = LayerMask.GetMask("Cargo");
+    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    
+    if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
+    {
+        if (hit.collider.gameObject == gameObject) // Ensure we clicked this box
+        {
+            isDragging = true;
+            offset = transform.position - GetMouseWorldPosition();
+            Debug.Log($"👆 Picked up: {gameObject.name}");
+        }
+    }
+}
 
     private Vector3 GetMouseWorldPosition()
     {
@@ -82,33 +66,31 @@ public class CargoInteractable : MonoBehaviour
         return Camera.main.ScreenToWorldPoint(mousePos);
     }
 
-    // ✅ Checks if the box is floating & moves it back if needed
     private IEnumerator CheckIfFloating()
     {
-        yield return new WaitForSeconds(0.5f); // Wait for physics to settle
+        yield return new WaitForSeconds(0.5f); // Allow physics to settle
 
-        if (!IsBoxSupported())
+        if (!IsBoxOnSurface())
         {
-            Debug.Log("Box is floating! Returning to original position.");
-            StartCoroutine(MoveBackSmoothly());
+            Debug.Log("Box is floating! Moving back.");
+            StartCoroutine(MoveBackToOriginalPosition());
         }
     }
 
-    private bool IsBoxSupported()
+    private bool IsBoxOnSurface()
     {
         RaycastHit hit;
-        // Cast a ray downwards to check for ground or other boxes
         if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.2f))
         {
-            if (hit.collider.CompareTag("Cargo") || hit.collider.CompareTag("Ground"))
+            if (hit.collider.CompareTag("Cargo") || hit.collider.CompareTag("Container"))
             {
-                return true; // Supported by another box or ground
+                return true; // The box is resting on another surface
             }
         }
-        return false; // Floating in the air
+        return false; // It's floating
     }
 
-    private IEnumerator MoveBackSmoothly()
+    private IEnumerator MoveBackToOriginalPosition()
     {
         float time = 0;
         Vector3 startPosition = transform.position;

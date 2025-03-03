@@ -704,7 +704,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &673793615
+--- !u!65 &673793617
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -723,8 +723,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 240.62779, y: 98.67249, z: 105.30576}
-  m_Center: {x: 61.84907, y: -17.26114, z: 7.895582}
+  m_Size: {x: 234.56424, y: 107.674675, z: 197.54054}
+  m_Center: {x: 6.73023, y: 1.5728644, z: -99.27754}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1251,10 +1251,10 @@ PrefabInstance:
       addedObject: {fileID: 673793608}
     - targetCorrespondingSourceObject: {fileID: -3763219778723312929, guid: ef2e5632629424147967b854ec60a5a2, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 673793615}
+      addedObject: {fileID: 673793614}
     - targetCorrespondingSourceObject: {fileID: -3763219778723312929, guid: ef2e5632629424147967b854ec60a5a2, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 673793614}
+      addedObject: {fileID: 673793617}
     - targetCorrespondingSourceObject: {fileID: 8528488698644952240, guid: ef2e5632629424147967b854ec60a5a2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1343438064}

@@ -3,13 +3,14 @@ using TMPro;
 
 public class ProductItem : MonoBehaviour
 {
-    public TMP_Text productNameText, dimensionsText, weightText, quantityText;
+    public TMP_Text productNameText, dimensionsText, weightText, volumeText, quantityTextText;
     
-    public void SetProductDetails(string name, string length, string breadth, string height, string weight, string quantity)
+    public void SetProductDetails(string name, float length, float breadth, float height, float weight, float volume, int quantityText)
     {
         productNameText.text = name;
         dimensionsText.text = $"L: {length} B: {breadth} H: {height}";
-        weightText.text = $"Weight: {weight} kg";
-        quantityText.text = $"Qty: {quantity}";
+        weightText.text = $"Weight: {weight}";
+        volumeText.text = $"Volume: {volume}";
+        quantityTextText.text = $"Qty: {quantityText}";
     }
 }

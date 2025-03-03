@@ -9002,7 +9002,7 @@ MonoBehaviour:
   quantitymanagerInput: {fileID: 0}
   listViewContent: {fileID: 966108700}
   productPrefab: {fileID: 7676757966229463815, guid: 8621543cae54d3f48bbb41a84efdc9e9, type: 3}
-  inventoryCountText: {fileID: 0}
+  inventoryCountText: {fileID: 1404389784}
 --- !u!1 &790481386
 GameObject:
   m_ObjectHideFlags: 0
@@ -18988,8 +18988,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 433.97, y: 0.0010719}
-  m_SizeDelta: {x: 941.17, y: 490.07}
+  m_AnchoredPosition: {x: 412.97, y: 0.0010719}
+  m_SizeDelta: {x: 895.64, y: 490.07}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1676129632
 MonoBehaviour:

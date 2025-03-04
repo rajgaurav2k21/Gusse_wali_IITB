@@ -9,9 +9,8 @@ public class ProductUI : MonoBehaviour
     public TMP_Text heightText;
     public TMP_Text weightText;
     public TMP_Text volumeText;
-    public TMP_Text quantityTextText;
 
-    public void SetProductDetails(string name, float length, float breadth, float height, float weight, float volume, int quantity)
+    public void SetProductDetails(string name, float length, float breadth, float height, float weight, float volume)
     {
         nameText.text = name;
         lengthText.text = length.ToString();
@@ -19,6 +18,5 @@ public class ProductUI : MonoBehaviour
         heightText.text = height.ToString();
         weightText.text = weight.ToString();
         volumeText.text = volume.ToString();
-        quantityTextText.text = quantity.ToString();
     }
 }

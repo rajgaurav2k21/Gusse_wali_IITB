@@ -1051,7 +1051,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 60.5, y: -27.5}
-  m_SizeDelta: {x: 0, y: 55}
+  m_SizeDelta: {x: 121, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &138700950
 MonoBehaviour:
@@ -8999,10 +8999,8 @@ MonoBehaviour:
   heightInput: {fileID: 856098385}
   weightInput: {fileID: 340183914}
   volumeInput: {fileID: 1850515547}
-  quantitymanagerInput: {fileID: 0}
-  listViewContent: {fileID: 966108700}
-  productPrefab: {fileID: 7676757966229463815, guid: 8621543cae54d3f48bbb41a84efdc9e9, type: 3}
-  inventoryCountText: {fileID: 1404389784}
+  listViewContent: {fileID: 171101422}
+  productPrefab: {fileID: 2074673652}
 --- !u!1 &790481386
 GameObject:
   m_ObjectHideFlags: 0
@@ -12713,14 +12711,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.98490566, g: 0.9718975, b: 0.9718975, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cc9cf52761c2a5644ba7e9a8d5490c5a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 26c2cf9bd94cbe6409d710b006a4f9e7, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -19927,7 +19925,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 68.275, y: -27.5}
-  m_SizeDelta: {x: 136.55, y: 55}
+  m_SizeDelta: {x: 0, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1736490772
 MonoBehaviour:
@@ -22250,7 +22248,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 88.275, y: -27.5}
-  m_SizeDelta: {x: 56.55, y: 45}
+  m_SizeDelta: {x: 0, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1979204602
 MonoBehaviour:
@@ -22467,7 +22465,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 88.275, y: -27.5}
-  m_SizeDelta: {x: 56.55, y: 45}
+  m_SizeDelta: {x: 0, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1990571542
 MonoBehaviour:
@@ -23002,7 +23000,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 60.5, y: -27.5}
-  m_SizeDelta: {x: 121, y: 55}
+  m_SizeDelta: {x: 0, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2049035218
 MonoBehaviour:

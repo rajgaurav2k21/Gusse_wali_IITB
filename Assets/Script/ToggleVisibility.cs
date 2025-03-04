@@ -1,47 +1,52 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TogglePartOfPrefab : MonoBehaviour
+public class ToggleUpwayVisibility : MonoBehaviour
 {
     public Toggle visibilityToggle;
-    public GameObject prefabInstance;
-    public string childObjectName;
-    private GameObject partOfPrefab; 
+    public GameObject prefabInstance; 
+    private GameObject upwayPart;
 
     void Start()
     {
         if (prefabInstance == null)
         {
-            Debug.LogError("Prefab instance not assigned!");
+            Debug.LogError("❌ Prefab instance is NULL! Assign the correct clone.");
             return;
         }
 
-        partOfPrefab = prefabInstance.transform.Find(childObjectName)?.gameObject;
+        // Find Upway INSIDE the cloned prefab
+        upwayPart = prefabInstance.transform.Find("Upway")?.gameObject;
 
-        if (partOfPrefab == null)
+        if (upwayPart == null)
         {
-            Debug.LogError("Child object not found: " + childObjectName);
+            Debug.LogError("❌ Upway NOT FOUND inside cloned prefab! Check the name.");
             return;
         }
+        else
+        {
+            Debug.Log("✅ Upway FOUND inside cloned prefab!");
+            upwayPart.SetActive(false); // Hide at start
+        }
 
+        // Add Toggle listener
+        visibilityToggle.onValueChanged.RemoveAllListeners();
         visibilityToggle.onValueChanged.AddListener(SetVisibility);
-        SetVisibility(visibilityToggle.isOn);
     }
 
-void SetVisibility(bool isVisible)
+   void SetVisibility(bool isVisible)
 {
-    Debug.Log("Toggle changed: " + isVisible);
+    Debug.Log("✅ Toggle clicked: " + isVisible);
 
-    if (partOfPrefab != null)
+    if (upwayPart == null)
     {
-        partOfPrefab.SetActive(isVisible);
-        Debug.Log("Upway visibility set to: " + isVisible);
+        Debug.LogError("❌ Upway is NULL! Cannot change visibility.");
+        return;
     }
-    else
-    {
-        Debug.LogError("Upway (partOfPrefab) is NULL! Check the object reference.");
-    }
+
+    upwayPart.SetActive(isVisible);
+    Canvas.ForceUpdateCanvases(); // Force UI update
+    Debug.Log("🔄 Upway visibility changed to: " + isVisible + " | Active: " + upwayPart.activeSelf);
 }
-
 
 }

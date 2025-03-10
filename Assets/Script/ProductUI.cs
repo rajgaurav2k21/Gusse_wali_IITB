@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class ProductUI : MonoBehaviour
 {
-    public TMP_Text nameText;
-    public TMP_Text lengthText;
-    public TMP_Text breadthText;
-    public TMP_Text heightText;
-    public TMP_Text weightText;
-    public TMP_Text volumeText;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI lengthText;
+    public TextMeshProUGUI breadthText;
+    public TextMeshProUGUI heightText;
+    public TextMeshProUGUI weightText;
+    public TextMeshProUGUI volumeText;
+     public TextMeshProUGUI quantityText;
 
-    public void SetProductDetails(string name, float length, float breadth, float height, float weight, float volume)
+    public void SetProductDetails(string name, float length, float breadth, float height, float weight, float volume, float quantity)
     {
         nameText.text = name;
         lengthText.text = length.ToString();
@@ -18,5 +19,6 @@ public class ProductUI : MonoBehaviour
         heightText.text = height.ToString();
         weightText.text = weight.ToString();
         volumeText.text = volume.ToString();
+        quantityText.text = quantity.ToString();
     }
 }

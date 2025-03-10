@@ -8,6 +8,8 @@ public class UIManager : MonoBehaviour
     public TMP_InputField breadthInput;
     public TMP_InputField heightInput;
     public TMP_InputField weightInput;
+    public TMP_InputField volumeInput;
+
 
     public void ClearInputFields()
     {
@@ -16,5 +18,6 @@ public class UIManager : MonoBehaviour
         breadthInput.text = "";
         heightInput.text = "";
         weightInput.text = "";
+        volumeInput.text="";
     }
 }

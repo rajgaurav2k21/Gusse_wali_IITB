@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7642501648692824676}
   - component: {fileID: 1917872995649265929}
   - component: {fileID: 6774964496892027088}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04310aaf3c366f645bc0e00eb05d1a08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  originalPosition: {x: 0, y: 0, z: 0}
 --- !u!65 &6774964496892027088
 BoxCollider:
   m_ObjectHideFlags: 0

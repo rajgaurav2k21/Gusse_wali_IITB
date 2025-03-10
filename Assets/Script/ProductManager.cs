@@ -12,6 +12,7 @@ public class ProductManager : MonoBehaviour
     public TMP_InputField heightInput;
     public TMP_InputField weightInput;
     public TMP_InputField volumeInput;
+    public TextMeshProUGUI quantityInput;
 
 
 
@@ -26,7 +27,7 @@ public class ProductManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(nameInput.text) || string.IsNullOrEmpty(lengthInput.text) ||
             string.IsNullOrEmpty(breadthInput.text) || string.IsNullOrEmpty(heightInput.text) ||
-            string.IsNullOrEmpty(weightInput.text) || string.IsNullOrEmpty(volumeInput.text) )
+            string.IsNullOrEmpty(weightInput.text) || string.IsNullOrEmpty(volumeInput.text)||string.IsNullOrEmpty(quantityInput.text) )
         {
             Debug.LogWarning("Please fill in all fields.");
             return;
@@ -35,13 +36,14 @@ public class ProductManager : MonoBehaviour
         GameObject newProduct = Instantiate(productPrefab, listViewContent);
         ProductUI productUI = newProduct.GetComponent<ProductUI>();
 
-        productUI.SetProductDetails(
+         productUI.SetProductDetails(
             nameInput.text,
             float.Parse(lengthInput.text),
             float.Parse(breadthInput.text),
             float.Parse(heightInput.text),
             float.Parse(weightInput.text),
-            float.Parse(volumeInput.text)
+            float.Parse(volumeInput.text),
+            float.Parse(quantityInput.text)
 
             
             

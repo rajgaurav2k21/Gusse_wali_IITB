@@ -4,7 +4,7 @@ using System.Collections;
 public class CargoBox : MonoBehaviour
 {
     private Rigidbody rb;
-    private Vector3 originalPosition;
+    [SerializeField] private Vector3 originalPosition;
     private bool isDragging = false;
     private Vector3 offset;
 
@@ -15,7 +15,7 @@ public class CargoBox : MonoBehaviour
         rb.isKinematic = true; // Prevent physics movement when dragging
         rb.constraints = RigidbodyConstraints.FreezeRotation; // Prevent tipping over
 
-        originalPosition = transform.position;
+        originalPosition = transform.localPosition;
     }
 
     private void OnMouseOver()
@@ -93,15 +93,15 @@ public class CargoBox : MonoBehaviour
     private IEnumerator MoveBackToOriginalPosition()
     {
         float time = 0;
-        Vector3 startPosition = transform.position;
+        Vector3 startPosition = transform.localPosition;
 
         while (time < 1)
         {
-            transform.position = Vector3.Lerp(startPosition, originalPosition, time);
+            transform.localPosition = Vector3.Lerp(startPosition, originalPosition, time);
             time += Time.deltaTime * 2;
             yield return null;
         }
 
-        transform.position = originalPosition;
+        transform.localPosition = originalPosition;
     }
 }

@@ -1,38 +1,36 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class AddItem : MonoBehaviour
 {
-    public GameObject panel;
     public GameObject prefabToAdd;
     public Transform spawnPoint;
+    public TMP_Text groupText;  // Reference to GroupText outside the prefab
 
-    private GameObject currentInstance;
-
-    void Start()
-    {
-        panel.SetActive(false);
-    }
-
-    public void ShowPanel()
-    {
-        panel.SetActive(true);
-    }
-
-    public void HidePanel()
-    {
-        panel.SetActive(false);
-    }
+    private static int groupCounter = 1;
 
     public void AddPrefab()
     {
-        if (currentInstance == null && prefabToAdd != null && spawnPoint != null)
+        if (prefabToAdd != null && spawnPoint != null)
         {
-            currentInstance = Instantiate(prefabToAdd, spawnPoint.position, spawnPoint.rotation);
+            GameObject newPanel = Instantiate(prefabToAdd, spawnPoint.position, spawnPoint.rotation, spawnPoint);
+            newPanel.SetActive(true);
+
+            // Update the GroupText that is outside the prefab
+            if (groupText != null)
+            {
+                groupText.text = "Group " + groupCounter;
+            }
+            else
+            {
+                Debug.LogWarning("GroupText reference is missing in the Inspector!");
+            }
+
+            groupCounter++;  // Increment for the next group
         }
         else
         {
-            Debug.LogWarning("Prefab already exists or missing references.");
+            Debug.LogWarning("Prefab missing or spawn point not assigned.");
         }
     }
 }

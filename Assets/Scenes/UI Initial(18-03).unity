@@ -1150,12 +1150,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 139771787}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62c2dd2df7aeb8148bc1a8f25f7d139e, type: 3}
+  m_Script: {fileID: 11500000, guid: e7e409ef31a43ac4f8d3cc730e91c987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quantityText: {fileID: 1069535735}
-  incrementButton: {fileID: 0}
-  decrementButton: {fileID: 0}
+  valueText: {fileID: 1069535735}
 --- !u!1 &141203794
 GameObject:
   m_ObjectHideFlags: 0
@@ -3118,7 +3116,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 139771789}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: QuantityController, Assembly-CSharp
         m_MethodName: DecreaseQuantity
         m_Mode: 1
@@ -10260,8 +10258,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 1391128834}
-  disableObject: {fileID: 1120834683}
-  enableObject: {fileID: 391095606}
 --- !u!114 &883370067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10771,6 +10767,18 @@ MonoBehaviour:
       - m_Target: {fileID: 787529873}
         m_TargetAssemblyTypeName: ProductManager, Assembly-CSharp
         m_MethodName: AddProductToList
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 139771789}
+        m_TargetAssemblyTypeName: IncrementValue, Assembly-CSharp
+        m_MethodName: Increment
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

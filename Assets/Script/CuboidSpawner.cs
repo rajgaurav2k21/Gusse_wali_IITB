@@ -21,13 +21,11 @@ public class CuboidSpawner : MonoBehaviour
         float breadth = GetInputValue(breadthInput);
         float height = GetInputValue(heightInput);
 
-        // Only spawn if not already spawned
         if (spawnedCuboid == null)
         {
             spawnedCuboid = Instantiate(cuboidPrefab, spawnPoint.position, Quaternion.identity);
         }
 
-        // Apply scale
         spawnedCuboid.transform.localScale = new Vector3(length, height, breadth);
     }
 

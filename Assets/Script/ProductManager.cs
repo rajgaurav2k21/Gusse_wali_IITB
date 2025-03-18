@@ -1,11 +1,9 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
+using System.IO;
 
-[System.Serializable]
 public class ProductManager : MonoBehaviour
 {
-    [Header("Input Fields")]
     public TMP_InputField nameInput;
     public TMP_InputField lengthInput;
     public TMP_InputField breadthInput;
@@ -14,35 +12,62 @@ public class ProductManager : MonoBehaviour
     public TMP_InputField volumeInput;
     public TextMeshProUGUI quantityText;
 
-    [Header("UI Elements")]
-    public Transform listViewContent;
-    public GameObject productPrefab;
+    private string filePath;
+
+    private void Start()
+    {
+        string dataFolder = Path.Combine(Application.dataPath, "Data");
+
+        if (!Directory.Exists(dataFolder))
+        {
+            Directory.CreateDirectory(dataFolder);
+            Debug.Log("Data folder created.");
+        }
+        else
+        {
+            Debug.Log("Data folder already exists.");
+        }
+
+        filePath = Path.Combine(dataFolder, "ProductData.csv");
+
+        if (!File.Exists(filePath))
+        {
+            File.WriteAllText(filePath, "Product Name,Length,Breadth,Height,Weight,Volume,Quantity\n");
+            Debug.Log("CSV file created.");
+        }
+        else
+        {
+            Debug.Log("CSV file already exists.");
+        }
+    }
 
     public void AddProductToList()
     {
-        if (string.IsNullOrEmpty(nameInput.text) || string.IsNullOrEmpty(lengthInput.text) ||
-            string.IsNullOrEmpty(breadthInput.text) || string.IsNullOrEmpty(heightInput.text) ||
-            string.IsNullOrEmpty(weightInput.text) || string.IsNullOrEmpty(volumeInput.text) ||
-            string.IsNullOrEmpty(quantityText.text))
+        if (AreAllFieldsFilled())
         {
-            Debug.LogWarning("Please fill in all fields.");
-            return;
+            SaveProductToCSV();
+            ClearInputs();
         }
+    }
 
-        GameObject newProduct = Instantiate(productPrefab, listViewContent);
-        ProductUI productUI = newProduct.GetComponent<ProductUI>();
+    private bool AreAllFieldsFilled()
+    {
+        return !string.IsNullOrEmpty(nameInput.text) &&
+               !string.IsNullOrEmpty(lengthInput.text) &&
+               !string.IsNullOrEmpty(breadthInput.text) &&
+               !string.IsNullOrEmpty(heightInput.text) &&
+               !string.IsNullOrEmpty(weightInput.text) &&
+               !string.IsNullOrEmpty(volumeInput.text) &&
+               !string.IsNullOrEmpty(quantityText.text);
+    }
 
-        productUI.SetProductDetails(
-            nameInput.text,
-            float.Parse(lengthInput.text),
-            float.Parse(breadthInput.text),
-            float.Parse(heightInput.text),
-            float.Parse(weightInput.text),
-            float.Parse(volumeInput.text),
-            float.Parse(quantityText.text)
-        );
+    private void SaveProductToCSV()
+    {
+        string data = $"{nameInput.text},{lengthInput.text},{breadthInput.text},{heightInput.text}," +
+                      $"{weightInput.text},{volumeInput.text},{quantityText.text}\n";
 
-        ClearInputs();
+        File.AppendAllText(filePath, data);
+        Debug.Log("Data saved to CSV.");
     }
 
     public void ClearInputs()

@@ -58,6 +58,7 @@ public class CargoBoxProperties : MonoBehaviour
     public Material warningMaterial;
 
     private Renderer boxRenderer;
+    public Transform objectToScaleExternally;
 
     private void Awake()
     {

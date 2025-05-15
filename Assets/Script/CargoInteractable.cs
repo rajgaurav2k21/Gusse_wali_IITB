@@ -1,107 +1,220 @@
 using UnityEngine;
-using System.Collections;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
-public class CargoBox : MonoBehaviour
+public class CargoInteractable : MonoBehaviour
 {
-    private Rigidbody rb;
-    [SerializeField] private Vector3 originalPosition;
     private bool isDragging = false;
     private Vector3 offset;
-
-    private void Start()
+    private Camera mainCamera;
+    
+    // Truck boundaries (set in Inspector)
+    public Vector3 truckMinBounds;
+    public Vector3 truckMaxBounds;
+    
+    // Optional visual feedback
+    [Header("Visual Feedback")]
+    [SerializeField] private bool enableHighlight = true;
+    [SerializeField] private Color highlightColor = new Color(1f, 0.92f, 0.016f, 0.5f);
+    
+    // Cached components
+    private Renderer objectRenderer;
+    private Color originalColor;
+    private Material material;
+    private Vector3 originalPosition;
+    
+    void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.useGravity = true;
-        rb.isKinematic = true; // Prevent physics movement when dragging
-        rb.constraints = RigidbodyConstraints.FreezeRotation; // Prevent tipping over
-
-        originalPosition = transform.localPosition;
+        mainCamera = Camera.main;
+        objectRenderer = GetComponent<Renderer>();
+        originalPosition = transform.position;
+        
+        if (objectRenderer != null && enableHighlight)
+        {
+            material = objectRenderer.material;
+            originalColor = material.color;
+        }
+        
+        // Setup EventTrigger component in the Inspector
+        SetupEventTrigger();
     }
-
-    private void OnMouseOver()
-{
-    if (Input.GetMouseButtonDown(0)) // Left click
+    
+    // Setup EventTrigger component with all necessary events
+    private void SetupEventTrigger()
     {
+        // Get or add EventTrigger component
+        EventTrigger eventTrigger = GetComponent<EventTrigger>();
+        if (eventTrigger == null)
+        {
+            eventTrigger = gameObject.AddComponent<EventTrigger>();
+        }
+        
+        // Clear existing entries to avoid duplicates
+        eventTrigger.triggers = new List<EventTrigger.Entry>();
+        
+        // Add Pointer Down event
+        EventTrigger.Entry pointerDown = new EventTrigger.Entry();
+        pointerDown.eventID = EventTriggerType.PointerDown;
+        pointerDown.callback.AddListener((data) => { OnPointerDownHandler((PointerEventData)data); });
+        eventTrigger.triggers.Add(pointerDown);
+        
+        // Add Drag event
+        EventTrigger.Entry drag = new EventTrigger.Entry();
+        drag.eventID = EventTriggerType.Drag;
+        drag.callback.AddListener((data) => { OnDragHandler((PointerEventData)data); });
+        eventTrigger.triggers.Add(drag);
+        
+        // Add Pointer Up event
+        EventTrigger.Entry pointerUp = new EventTrigger.Entry();
+        pointerUp.eventID = EventTriggerType.PointerUp;
+        pointerUp.callback.AddListener((data) => { OnPointerUpHandler((PointerEventData)data); });
+        eventTrigger.triggers.Add(pointerUp);
+        
+        Debug.Log("EventTrigger component has been set up on " + gameObject.name);
+    }
+    
+    // Event handler methods for EventTrigger
+    public void OnPointerDownHandler(PointerEventData data)
+    {
+        // Calculate offset between pointer position and object position
+        Vector3 pointerPos = GetPointerWorldPosition(data);
+        offset = transform.position - pointerPos;
         isDragging = true;
-        offset = transform.position - GetMouseWorldPosition();
+        
+        // Apply visual highlight
+        if (objectRenderer != null && enableHighlight)
+        {
+            material.color = highlightColor;
+        }
+        
+        Debug.Log($"Cargo selected: {gameObject.name}");
     }
-}
-
-    private void OnMouseDrag()
+    
+    public void OnDragHandler(PointerEventData data)
     {
-        if (!isDragging) return;
-        transform.position = GetMouseWorldPosition() + offset;
+        if (isDragging)
+        {
+            // Get current pointer position in world space
+            Vector3 pointerPos = GetPointerWorldPosition(data);
+            
+            // Calculate new position with the original offset
+            Vector3 newPosition = pointerPos + offset;
+            
+            // Constrain position within truck bounds if set
+            if (truckMinBounds != Vector3.zero || truckMaxBounds != Vector3.zero)
+            {
+                newPosition.x = Mathf.Clamp(newPosition.x, truckMinBounds.x, truckMaxBounds.x);
+                newPosition.y = Mathf.Clamp(newPosition.y, truckMinBounds.y, truckMaxBounds.y);
+                newPosition.z = Mathf.Clamp(newPosition.z, truckMinBounds.z, truckMaxBounds.z);
+            }
+            
+            transform.position = newPosition;
+        }
     }
-
-    private void OnMouseUp()
+    
+    public void OnPointerUpHandler(PointerEventData data)
     {
         isDragging = false;
-        rb.isKinematic = false; // Enable physics again
-
-        StartCoroutine(CheckIfFloating());
-    }
-    private void OnMouseDown()
-{
-    if (Camera.main == null) return;
-
-    // Ignore container collider and interact only with cargo boxes
-    int layerMask = LayerMask.GetMask("Cargo");
-    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    
-    if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
-    {
-        if (hit.collider.gameObject == gameObject) // Ensure we clicked this box
+        
+        // Reset visual feedback
+        if (objectRenderer != null && enableHighlight)
         {
-            isDragging = true;
-            offset = transform.position - GetMouseWorldPosition();
-            Debug.Log($"👆 Picked up: {gameObject.name}");
+            material.color = originalColor;
         }
+        
+        // Check if the cargo is in a valid position
+        ValidatePosition();
+        
+        Debug.Log($"Cargo released: {gameObject.name}");
+    }
+    
+    // Helper method to convert screen pointer position to world position
+    private Vector3 GetPointerWorldPosition(PointerEventData data)
+    {
+        // Create a ray from the camera through the pointer position
+        Ray ray = mainCamera.ScreenPointToRay(data.position);
+        
+        // Create a plane at the object's height (y-position)
+        Plane dragPlane = new Plane(Vector3.up, new Vector3(0, transform.position.y, 0));
+        
+        // Check if the ray hits the plane
+        if (dragPlane.Raycast(ray, out float distance))
+        {
+            return ray.GetPoint(distance);
+        }
+        
+        // Fallback to current position if raycast fails
+        return transform.position;
+    }
+    
+    // Check if the box is placed in a valid position
+    private void ValidatePosition()
+{
+    bool inside =
+        transform.position.x >= truckMinBounds.x && transform.position.x <= truckMaxBounds.x &&
+        transform.position.y >= truckMinBounds.y && transform.position.y <= truckMaxBounds.y &&
+        transform.position.z >= truckMinBounds.z && transform.position.z <= truckMaxBounds.z;
+
+    if (inside)
+    {
+        Debug.Log($"Cargo {gameObject.name} placed inside container");
+    }
+    else
+    {
+        Debug.Log($"Cargo {gameObject.name} placed outside container - resetting position");
+        transform.position = originalPosition;
     }
 }
 
-    private Vector3 GetMouseWorldPosition()
+    // Legacy mouse input handlers (optional, can be removed if you only want EventTrigger)
+    void OnMouseDown()
     {
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = Camera.main.WorldToScreenPoint(transform.position).z;
-        return Camera.main.ScreenToWorldPoint(mousePos);
-    }
-
-    private IEnumerator CheckIfFloating()
-    {
-        yield return new WaitForSeconds(0.5f); // Allow physics to settle
-
-        if (!IsBoxOnSurface())
+        Vector3 mousePos = mainCamera.ScreenToWorldPoint(new Vector3(
+            Input.mousePosition.x, 
+            Input.mousePosition.y, 
+            mainCamera.WorldToScreenPoint(transform.position).z
+        ));
+        offset = transform.position - mousePos;
+        isDragging = true;
+        
+        if (objectRenderer != null && enableHighlight)
         {
-            Debug.Log("Box is floating! Moving back.");
-            StartCoroutine(MoveBackToOriginalPosition());
+            material.color = highlightColor;
         }
     }
-
-    private bool IsBoxOnSurface()
+    
+    void OnMouseDrag()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.2f))
+        if (isDragging)
         {
-            if (hit.collider.CompareTag("Cargo") || hit.collider.CompareTag("Container"))
+            Vector3 mousePos = mainCamera.ScreenToWorldPoint(new Vector3(
+                Input.mousePosition.x, 
+                Input.mousePosition.y, 
+                mainCamera.WorldToScreenPoint(transform.position).z
+            ));
+            
+            Vector3 newPosition = mousePos + offset;
+            
+            if (truckMinBounds != Vector3.zero || truckMaxBounds != Vector3.zero)
             {
-                return true; // The box is resting on another surface
+                newPosition.x = Mathf.Clamp(newPosition.x, truckMinBounds.x, truckMaxBounds.x);
+                newPosition.y = Mathf.Clamp(newPosition.y, truckMinBounds.y, truckMaxBounds.y);
+                newPosition.z = Mathf.Clamp(newPosition.z, truckMinBounds.z, truckMaxBounds.z);
             }
+            
+            transform.position = newPosition;
         }
-        return false; // It's floating
     }
-
-    private IEnumerator MoveBackToOriginalPosition()
+    
+    void OnMouseUp()
     {
-        float time = 0;
-        Vector3 startPosition = transform.localPosition;
-
-        while (time < 1)
+        isDragging = false;
+        
+        if (objectRenderer != null && enableHighlight)
         {
-            transform.localPosition = Vector3.Lerp(startPosition, originalPosition, time);
-            time += Time.deltaTime * 2;
-            yield return null;
+            material.color = originalColor;
         }
-
-        transform.localPosition = originalPosition;
+        
+        ValidatePosition();
     }
 }

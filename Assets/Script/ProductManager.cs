@@ -11,6 +11,15 @@ public class ProductManager : MonoBehaviour
     public TMP_InputField weightInput;
     public TMP_InputField volumeInput;
     public TextMeshProUGUI quantityText;
+    public TMP_InputField VnameInput;
+    public TMP_InputField VlengthInput2;
+    public TMP_InputField VbreadthInput;
+    public TMP_InputField VheightInput;
+    public TMP_InputField VweightInput;
+    public TMP_InputField VvolumeInput;
+    public TextMeshProUGUI VquantityText;
+    
+
 
     private string filePath;
 
@@ -81,3 +90,6 @@ public class ProductManager : MonoBehaviour
         quantityText.text = "0";
     }
 }
+
+
+

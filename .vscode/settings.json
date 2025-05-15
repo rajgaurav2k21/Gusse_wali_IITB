@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Gusse_wali_IITB.sln"
+    "dotnet.defaultSolution": "IITB_FinalWork.sln"
 }

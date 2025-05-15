@@ -1,0 +1,15 @@
+{
+    "name": "Assignment-1(IITB)",
+    "short_name": "Assignment-1(IITB)",
+    "start_url": "index.html",
+    "display": "fullscreen",
+    "background_color": "#231F20",
+    "theme_color": "#000",
+    "description": "Cargowebapp",
+    "icons": [{
+      "src": "TemplateData/icons/unity-logo-dark.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }]
+  }

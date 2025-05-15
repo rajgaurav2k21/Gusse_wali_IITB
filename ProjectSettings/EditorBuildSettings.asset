@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TruckLoader.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    path: Assets/Scenes/LoaderF.unity
+    guid: b86bd69cccd0cf340ae1e58ba80f8c37
   m_configObjects: {}

@@ -565,6 +565,7 @@ class BoxType(BaseModel):
     weight: str
     volume: str
     quantity: str
+    fragile: bool
 
 class ContainerConfig(BaseModel):
     CONTAINER_LENGTH_IN: str
@@ -591,6 +592,12 @@ def safe_int(value: str) -> int:
 @app.post("/start")
 async def start_proc(config: ContainerConfig):
 
+    def str_to_bool(s):
+        return str(s).strip().lower() in ['true']
+
+    
+
+
 
     def generate_instances():
         typedata = []
@@ -604,18 +611,19 @@ async def start_proc(config: ContainerConfig):
             H_in = safe_float(box.height)
             Wt_g = safe_float(box.weight)
             qt = safe_int(box.quantity )
+            is_frag = str_to_bool(box.fragile)
             md = min(L_in, W_in)
-            typedata.append((name, L_in, W_in, H_in, Wt_g, md,qt))
+            typedata.append((name, L_in, W_in, H_in, Wt_g, md,qt,is_frag))
         typedata.sort(key=lambda x: x[5])  # asc by min_dim
 
         box_list: List[Box] = []
 
         curr_seq = 1
         grp = 1
-        for (nm, l_in, w_in, h_in, wt_g, md, qt) in typedata:
-          
+        for (nm, l_in, w_in, h_in, wt_g, md, qt,is_frag) in typedata:
+            
             for q in range(qt):
-                is_frag= (random.random()<0.1)
+                
 
 
                 new_box= Box(
@@ -690,6 +698,7 @@ async def start_proc(config: ContainerConfig):
         "height": bb.height,
         "x_norm": xnorm, "y_norm": ynorm, "z_norm": znorm,
         "group": bb.group,
+        "fragile": b.is_fragile,
         "placed": True
         })
 

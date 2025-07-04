@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 
 public class JsonApiSender : MonoBehaviour
 {
-    [SerializeField] private string apiUrl = "http://127.0.0.1:8000/start";
+    [SerializeField] private string apiUrl = "http://10.119.11.41:8001/start";
     [SerializeField] private bool useSavedFile = true;
     
     
@@ -51,9 +51,10 @@ public class JsonApiSender : MonoBehaviour
         
         // Set headers
         request.SetRequestHeader("Content-Type", "application/json");
-      
+
         // Send the request
-        Debug.Log("Sending JSON data to API: " + apiUrl);
+        string jsonBody = JsonUtility.ToJson(jsonContent, true);
+        Debug.Log("Sending JSON data to API: " + jsonContent);
         yield return request.SendWebRequest();
        
         

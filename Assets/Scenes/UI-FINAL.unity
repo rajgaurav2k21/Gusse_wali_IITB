@@ -25,8 +25,8 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubtractiveShadowColor: {r: 0.6790103, g: 0.7272938, b: 0.93962264, a: 1}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -854,7 +854,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44bc0bca58fb46448b63767e6d257568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiUrl: http://127.0.0.1:8000/start
+  apiUrl: http://10.119.11.41:8001/start
   useSavedFile: 1
   cargoSubmitReference: {fileID: 1432965088}
 --- !u!4 &48308428
@@ -2325,6 +2325,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2128315548}
   m_LocalEulerAnglesHint: {x: 88.558, y: 86.85, z: 72.268}
+--- !u!1001 &170807295
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.0653288
+      objectReference: {fileID: 0}
+    - target: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.1861548
+      objectReference: {fileID: 0}
+    - target: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.5015428
+      objectReference: {fileID: 0}
+    - target: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.66503084
+      objectReference: {fileID: 0}
+    - target: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.6115141
+      objectReference: {fileID: 0}
+    - target: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.33291483
+      objectReference: {fileID: 0}
+    - target: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.27009696
+      objectReference: {fileID: 0}
+    - target: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7449782648777001352, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+      propertyPath: m_Name
+      value: CARGOcube
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: -4161369568681901532, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
 --- !u!1 &171101421
 GameObject:
   m_ObjectHideFlags: 0
@@ -2525,7 +2582,7 @@ RectTransform:
   m_GameObject: {fileID: 185891435}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5946227, y: 0.5946227, z: 0.5946227}
+  m_LocalScale: {x: 1.1757333, y: 1.1757333, z: 1.1757333}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1659535585}
@@ -2536,7 +2593,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 36.948, y: 118.11798}
+  m_AnchoredPosition: {x: -14.051968, y: 103}
   m_SizeDelta: {x: 0, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &185891437
@@ -4491,7 +4548,7 @@ RectTransform:
   m_GameObject: {fileID: 306624214}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.59307754, y: 0.59307754, z: 0.59307754}
+  m_LocalScale: {x: 0.6055767, y: 0.59307754, z: 0.59307754}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1984208974}
@@ -4500,8 +4557,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 79, y: -35.2}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 78.2215, y: -33.62918}
+  m_SizeDelta: {x: 197.3876, y: 44.7028}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &306624216
 MonoBehaviour:
@@ -6185,43 +6242,7 @@ MonoBehaviour:
   animationSolution: 1
   onClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1432965088}
-        m_TargetAssemblyTypeName: CargoSubmit, Assembly-CSharp
-        m_MethodName: SaveToJSON
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1432965088}
-        m_TargetAssemblyTypeName: CargoSubmit, Assembly-CSharp
-        m_MethodName: LoadFromJSON
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 48308427}
-        m_TargetAssemblyTypeName: JsonApiSender, Assembly-CSharp
-        m_MethodName: SendJsonToApi
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onDoubleClick:
     m_PersistentCalls:
       m_Calls: []
@@ -7878,7 +7899,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -103, y: 11}
+  m_AnchoredPosition: {x: -251, y: 11}
   m_SizeDelta: {x: 191.56, y: 583.41}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &445598811
@@ -10349,6 +10370,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619802651}
   m_CullTransparentMesh: 0
+--- !u!4 &626721411 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -5499554889900253811, guid: 1dda16f3c90b4ce449f81f4a89afd66e, type: 3}
+  m_PrefabInstance: {fileID: 170807295}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &627965210
 GameObject:
   m_ObjectHideFlags: 0
@@ -14106,7 +14132,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.1322773, y: -16.930773}
+  m_AnchoredPosition: {x: 12.000001, y: -21.537872}
   m_SizeDelta: {x: 170.53, y: 96.321}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &746824091
@@ -15143,7 +15169,7 @@ MonoBehaviour:
   weightInput: {fileID: 340183914}
   volumeInput: {fileID: 1850515547}
   quantityText: {fileID: 1404389784}
-  VnameInput: {fileID: 0}
+  VnameInput: {fileID: 1236401229}
   VlengthInput2: {fileID: 0}
   VbreadthInput: {fileID: 0}
   VheightInput: {fileID: 0}
@@ -19756,14 +19782,14 @@ RectTransform:
   m_GameObject: {fileID: 1003787615}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.78330183, y: 0.78330183, z: 0.78330183}
+  m_LocalScale: {x: 1.1876422, y: 1.1876422, z: 1.1876422}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 445598810}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 52, y: 250}
+  m_AnchoredPosition: {x: 1, y: 250}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1003787617
@@ -20235,7 +20261,7 @@ RectTransform:
   m_GameObject: {fileID: 1025683247}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.2466836, y: 1.2462158, z: 1.1634921}
+  m_LocalScale: {x: 3.1089592, y: 1.1933513, z: 1.1141367}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1818334530}
@@ -28237,7 +28263,7 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1771065553}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: VehicleSwitcher, Assembly-CSharp
         m_MethodName: ActivateVehicle
         m_Mode: 3
@@ -29004,7 +29030,7 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1771065553}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: VehicleSwitcher, Assembly-CSharp
         m_MethodName: ActivateVehicle
         m_Mode: 3
@@ -29607,7 +29633,7 @@ MonoBehaviour:
   topView: {fileID: 153569082}
   sideView: {fileID: 1460183036}
   backView: {fileID: 1572721954}
-  truck: {fileID: 0}
+  truck: {fileID: 626721411}
   moveSpeed: 6
   rotateSpeed: 5
 --- !u!4 &1506619723
@@ -31058,8 +31084,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -51.700012, y: -48.9839}
-  m_SizeDelta: {x: 329, y: 190.3959}
+  m_AnchoredPosition: {x: -49.3, y: -49.4}
+  m_SizeDelta: {x: 391.0883, y: 168.88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1560937938
 MonoBehaviour:
@@ -33571,7 +33597,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 283, y: 33}
+  m_AnchoredPosition: {x: 274, y: 49.4}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1679051653
@@ -35562,54 +35588,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1761611290}
   m_CullTransparentMesh: 1
---- !u!1 &1771065552
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1771065554}
-  - component: {fileID: 1771065553}
-  m_Layer: 0
-  m_Name: Vehcile mnager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1771065553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1771065552}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fe2bc066993df440919e6d366d89d8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vehicles:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
---- !u!4 &1771065554
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1771065552}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 37.292297, y: 10.194626, z: -30.615494}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1773784677
 GameObject:
   m_ObjectHideFlags: 0
@@ -36024,8 +36002,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4294177779
+  m_fontColor: {r: 0.95294124, g: 0.95294124, b: 0.95294124, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -36835,7 +36813,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.1322773, y: 58.607113}
+  m_AnchoredPosition: {x: 12, y: 54}
   m_SizeDelta: {x: 170.53, y: 96.321}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1818562383
@@ -36866,7 +36844,7 @@ RectTransform:
   m_GameObject: {fileID: 1818562383}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5946227, y: 0.5946227, z: 0.5946227}
+  m_LocalScale: {x: 0.90156686, y: 0.90156686, z: 0.90156686}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1865681253}
@@ -36877,7 +36855,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 36.948, y: 167.68999}
+  m_AnchoredPosition: {x: -14.051968, y: 167.68999}
   m_SizeDelta: {x: 0, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1818562385
@@ -37833,7 +37811,7 @@ RectTransform:
   m_GameObject: {fileID: 1861525311}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5946227, y: 0.5946227, z: 0.5946227}
+  m_LocalScale: {x: 0.90156686, y: 0.90156686, z: 0.90156686}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 780874299}
@@ -37844,7 +37822,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 36.948, y: 215.19998}
+  m_AnchoredPosition: {x: -14.051968, y: 215.19998}
   m_SizeDelta: {x: 0, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1861525313
@@ -40517,7 +40495,7 @@ MonoBehaviour:
   onClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1771065553}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: VehicleSwitcher, Assembly-CSharp
         m_MethodName: ActivateVehicle
         m_Mode: 3
@@ -44171,6 +44149,6 @@ SceneRoots:
   - {fileID: 45091916}
   - {fileID: 1869821316}
   - {fileID: 208682189}
-  - {fileID: 1771065554}
   - {fileID: 1432965089}
   - {fileID: 48308428}
+  - {fileID: 170807295}

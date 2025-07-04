@@ -35,7 +35,15 @@ public class TruckData
     public float length;
     public float height;
     public float width;
-    public bool wt_capacity;
+    public float wt_capacity;
+}
+
+
+[Serializable]
+public class CargoResponse
+{
+    public TruckData truck_config;
+    public List<BoxPosition> final_arrangement;
 }
 
 public class CargoBoxProperties : MonoBehaviour
@@ -46,49 +54,44 @@ public class CargoBoxProperties : MonoBehaviour
     public bool isFragile = false;
     public BoxCollider boxCollider;
 
-    [Header("Constraint Status")]
-    public bool hasOverhangIssue = false;
-    public bool hasOverlapIssue = false;
-    public bool hasInAirIssue = false;
-    public bool isFragileCompromised = false;
+    // [Header("Constraint Status")]
+    // public bool hasOverhangIssue = false;
+    // public bool hasOverlapIssue = false;
+    // public bool hasInAirIssue = false;
+    // public bool isFragileCompromised = false;
 
-    [Header("Visualization")]
-    public bool showWarnings = true;
-    public Material defaultMaterial;
-    public Material warningMaterial;
+    // [Header("Visualization")]
+    // public bool showWarnings = true;
+    // public Material defaultMaterial;
+    // public Material warningMaterial;
 
     private Renderer boxRenderer;
     public Transform objectToScaleExternally;
 
-    private void Awake()
-    {
-        boxCollider = GetComponent<BoxCollider>();
-        if (boxCollider == null)
-            boxCollider = gameObject.AddComponent<BoxCollider>();
+    // private void Awake()
+    // {
+    //     if (boxRenderer != null)
+    //         defaultMaterial = boxRenderer.sharedMaterial;
+    // }
 
-        boxRenderer = GetComponent<Renderer>();
-        if (boxRenderer != null)
-            defaultMaterial = boxRenderer.sharedMaterial;
-    }
+    // public void SetWarningState(bool hasWarning)
+    // {
+    //     if (boxRenderer != null && showWarnings && warningMaterial != null)
+    //     {
+    //         boxRenderer.sharedMaterial = hasWarning ? warningMaterial : defaultMaterial;
+    //     }
+    // }
 
-    public void SetWarningState(bool hasWarning)
-    {
-        if (boxRenderer != null && showWarnings && warningMaterial != null)
-        {
-            boxRenderer.sharedMaterial = hasWarning ? warningMaterial : defaultMaterial;
-        }
-    }
+    // public void UpdateWarningVisual()
+    // {
+    //     bool hasAnyIssue = hasOverhangIssue || hasOverlapIssue || hasInAirIssue || isFragileCompromised;
+    //     SetWarningState(hasAnyIssue);
+    // }
 
-    public void UpdateWarningVisual()
-    {
-        bool hasAnyIssue = hasOverhangIssue || hasOverlapIssue || hasInAirIssue || isFragileCompromised;
-        SetWarningState(hasAnyIssue);
-    }
-
-    public Bounds GetWorldBounds()
-    {
-        return boxCollider.bounds;
-    }
+    // public Bounds GetWorldBounds()
+    // {
+    //     return boxCollider.bounds;
+    // }
 }
 
 public class CargoLoader : MonoBehaviour
@@ -100,25 +103,17 @@ public class CargoLoader : MonoBehaviour
 
     [Header("Truck References")]
     public Transform truckContainer;
+    public Transform cargoBoxCube;
 
     [Header("API Settings")]
     public string apiBaseUrl = "http://127.0.0.1:8000";
 
-    [Header("Constraint Settings")]
-    public bool checkOverhang = true;
-    public bool checkOverlap = true;
-    public bool checkInAir = true;
-    public bool checkFragility = true;
-    public Material warningMaterial;
-    public float maxOverhangPercentage = 0.2f;
-    public float minSupportPercentage = 0.7f;
-
     [Header("Auto-Scaling Settings")]
     public Vector3 maxViewSize = new Vector3(150f, 76f, 71f);
     public float scalingBuffer = 1.0f;
-
-    private Collider truckCollider;
     private float scaleFactor = 1.0f;
+
+
 
     private void Start()
     {
@@ -127,18 +122,12 @@ public class CargoLoader : MonoBehaviour
             Debug.LogError("Missing required references in inspector");
             return;
         }
-
-        if (truckContainer.GetComponent<Collider>() == null)
+        if (cargoBoxCube == null)
         {
-            BoxCollider boxCollider = truckContainer.gameObject.AddComponent<BoxCollider>();
-            boxCollider.isTrigger = true;
-            truckCollider = boxCollider;
-        }
-        else
-        {
-            truckCollider = truckContainer.GetComponent<Collider>();
+            Debug.LogWarning("CargoBoxCube reference is not assigned in inspector");
         }
     }
+
 
     public void LoadCargo()
     {
@@ -147,6 +136,8 @@ public class CargoLoader : MonoBehaviour
 
     private IEnumerator FetchCargoData()
     {
+
+        // // for local host
         using (UnityWebRequest www = UnityWebRequest.Get($"{apiBaseUrl}/config"))
         {
             yield return www.SendWebRequest();
@@ -181,6 +172,41 @@ public class CargoLoader : MonoBehaviour
                 Debug.LogError("Received empty or invalid cargo data");
             }
         }
+
+
+
+        // // for 10.119.11.41
+
+
+        // using (UnityWebRequest www = UnityWebRequest.Get($"{apiBaseUrl}/eachPartitionedData"))
+        // {
+        //     yield return www.SendWebRequest();
+
+        //     if (www.result != UnityWebRequest.Result.Success)
+        //     {
+        //         Debug.LogError($"Failed to fetch cargo data: {www.error}");
+        //         yield break;
+        //     }
+
+        //     // Deserialize the entire JSON into the wrapper class
+        //     CargoResponse cargoResponse = JsonUtility.FromJson<CargoResponse>(www.downloadHandler.text);
+
+        //     // Use truck_config to resize container
+        //     ResizeTruckContainer(cargoResponse.truck_config.length, cargoResponse.truck_config.height, cargoResponse.truck_config.width);
+
+        //     // Use final_arrangement to place cargo
+        //     if (cargoResponse.final_arrangement != null && cargoResponse.final_arrangement.Count > 0)
+        //     {
+        //         PlaceCargo(cargoResponse.final_arrangement);
+        //     }
+        //     else
+        //     {
+        //         Debug.LogError("Received empty or invalid cargo data");
+        //     }
+        // }
+
+
+
     }
 
     private void PlaceCargo(List<BoxPosition> boxes)
@@ -231,153 +257,72 @@ public class CargoLoader : MonoBehaviour
             boxProps.boxId = box.box_id;
             boxProps.weight = box.weight;
             boxProps.isFragile = box.is_fragile;
-            boxProps.warningMaterial = warningMaterial;
         }
     }
+
 
     private void ResizeTruckContainer(float length, float height, float width)
-{
-    // Define max and min view sizes
-    Vector3 maxViewSize = new Vector3(150f, 76f, 71f);
-    Vector3 minViewSize = new Vector3(130f, 40f, 50f); // Approximate min sizes
-
-    // Calculate scaling factors for each dimension based on max view size
-    float scaleX = maxViewSize.x / length;
-    float scaleY = maxViewSize.y / height;
-    float scaleZ = maxViewSize.z / width;
-
-    // Use the minimal scaling factor to ensure the entire truck fits within max view size
-    scaleFactor = Mathf.Min(scaleX, scaleY, scaleZ);
-
-    // Ensure the scaled dimensions are not smaller than minViewSize
-    float scaledLength = length * scaleFactor;
-    float scaledHeight = height * scaleFactor;
-    float scaledWidth = width * scaleFactor;
-
-    // Adjust scaleFactor if any dimension is below minViewSize
-    float minScaleX = minViewSize.x / length;
-    float minScaleY = minViewSize.y / height;
-    float minScaleZ = minViewSize.z / width;
-    float minScaleFactor = Mathf.Max(minScaleX, minScaleY, minScaleZ);
-
-    if (scaledLength < minViewSize.x || scaledHeight < minViewSize.y || scaledWidth < minViewSize.z)
     {
-        scaleFactor = minScaleFactor;
-        scaledLength = length * scaleFactor;
-        scaledHeight = height * scaleFactor;
-        scaledWidth = width * scaleFactor;
-    }
+        // Define max view size
+        Vector3 maxViewSize = new Vector3(150f, 76f, 71f);
 
-    // Apply buffer to prevent clipping
-    scaleFactor *= scalingBuffer;
+        // Minimum values for Y and Z axes (40 each)
+        float minY = 40f;
+        float minZ = 40f;
 
-    // Recalculate scaled dimensions with buffer
-    scaledLength = length * scaleFactor;
-    scaledHeight = height * scaleFactor;
-    scaledWidth = width * scaleFactor;
+        // Default to no scaling
+        scaleFactor = 1.0f;
 
-    // Determine frame height for proper positioning
-    float frameHeight = 1.0f * scaleFactor;
-    Transform truckFrame = null;
-    foreach (Transform child in truckContainer)
-    {
-        string childName = child.name.ToLower();
-        if (childName.Contains("frame") || childName.Contains("chassis"))
+        // Only scale down if dimensions exceed max view size
+        bool needsScaling = length > maxViewSize.x || height > maxViewSize.y || width > maxViewSize.z;
+
+        if (needsScaling)
         {
-            truckFrame = child;
-            break;
-        }
-    }
+            // Calculate scaling factors for each dimension based on max view size
+            float scaleX = maxViewSize.x / length;
+            float scaleY = maxViewSize.y / height;
+            float scaleZ = maxViewSize.z / width;
 
-    if (truckFrame != null)
-    {
-        Renderer frameRenderer = truckFrame.GetComponent<Renderer>();
-        if (frameRenderer != null)
+            // Use the minimal scaling factor to ensure the entire truck fits within max view size
+            scaleFactor = Mathf.Min(scaleX, scaleY, scaleZ);
+
+            // Check if height and width meet the minimum requirements after scaling
+            float tempScaledHeight = height * scaleFactor;
+            float tempScaledWidth = width * scaleFactor;
+
+            if (tempScaledHeight < minY && height > minY)
+            {
+                float tempScaleY = minY / height;
+                scaleFactor = Mathf.Max(scaleFactor, tempScaleY);
+            }
+
+            if (tempScaledWidth < minZ && width > minZ)
+            {
+                float tempScaleZ = minZ / width;
+                scaleFactor = Mathf.Max(scaleFactor, tempScaleZ);
+            }
+
+            // Apply buffer to prevent clipping
+            scaleFactor *= scalingBuffer;
+        }
+
+        // Calculate final dimensions with scaling factor (which may be 1.0 if no scaling needed)
+        float scaledLength = length * scaleFactor;
+        float scaledHeight = height * scaleFactor;
+        float scaledWidth = width * scaleFactor;
+
+        // Determine frame height for proper positioning
+        float frameHeight = 1.0f * scaleFactor;
+
+        if (cargoBoxCube != null)
         {
-            frameHeight = frameRenderer.bounds.max.y - truckContainer.position.y;
+            cargoBoxCube.localScale = new Vector3(scaledLength, scaledHeight, scaledWidth);
         }
+
     }
-
-    // Update truck components
-    Transform truckBody = null;
-    Transform truckFloor = null;
-    Transform truckSides = null;
-    Transform containerObject = null;
-
-    foreach (Transform child in truckContainer)
-    {
-        string childName = child.name.ToLower();
-        if (childName.Contains("body")) truckBody = child;
-        if (childName.Contains("floor") || childName.Contains("base")) truckFloor = child;
-        if (childName.Contains("sides") || childName.Contains("walls")) truckSides = child;
-        if (childName.Contains("container") || childName.Contains("box")) containerObject = child;
-    }
-
-    // Scale truck body
-    if (truckBody != null)
-    {
-        truckBody.localScale = new Vector3(
-            truckBody.localScale.x * scaleFactor,
-            truckBody.localScale.y * scaleFactor,
-            truckBody.localScale.z * scaleFactor
-        );
-    }
-
-    // Scale and position truck floor
-    if (truckFloor != null)
-    {
-        truckFloor.localScale = new Vector3(
-            truckFloor.localScale.x * scaleFactor,
-            truckFloor.localScale.y, // Keep floor thickness unscaled in Y
-            truckFloor.localScale.z * scaleFactor
-        );
-        truckFloor.localPosition = new Vector3(0, frameHeight, 0);
-    }
-
-    // Scale and position truck sides
-    if (truckSides != null)
-    {
-        truckSides.localScale = new Vector3(
-            truckSides.localScale.x * scaleFactor,
-            truckSides.localScale.y * scaleFactor,
-            truckSides.localScale.z * scaleFactor
-        );
-        truckSides.localPosition = new Vector3(0, frameHeight + (scaledHeight / 2), 0);
-    }
-
-    // Scale and position container
-    if (containerObject != null)
-    {
-        containerObject.localScale = new Vector3(
-            scaledLength,
-            scaledHeight,
-            scaledWidth
-        );
-        containerObject.localPosition = new Vector3(0, frameHeight + (scaledHeight / 2), 0);
-    }
-
-    // Update truck collider
-    if (truckCollider != null)
-    {
-        DestroyImmediate(truckCollider);
-    }
-
-    BoxCollider newCollider = truckContainer.gameObject.AddComponent<BoxCollider>();
-    newCollider.size = new Vector3(scaledLength, scaledHeight, scaledWidth);
-    newCollider.center = new Vector3(0, frameHeight + (scaledHeight / 2), 0);
-    newCollider.isTrigger = true;
-    truckCollider = newCollider;
-
-    // Adjust cargo anchor point
-    cargoAnchorPoint.localPosition = new Vector3(
-        cargoAnchorPoint.localPosition.x,
-        frameHeight,
-        cargoAnchorPoint.localPosition.z
-    );
-}
     private void ClearExistingCargo()
     {
-        foreach (Transform child in cargoAnchorPoint)
+        foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }

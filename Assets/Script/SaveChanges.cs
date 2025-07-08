@@ -1,14 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.IO;
+using UnityEngine.Networking;
+using System.Collections;
+using System.Runtime.InteropServices;
 
 public class SavePrefabPositions : MonoBehaviour
 {
     [SerializeField] private Button saveButton;
-    [SerializeField] private Transform anchorPoint; // Reference to the parent GameObject containing all prefabs
-    
-    private string savePath => Path.Combine(Application.persistentDataPath, "prefab_positions.json");
+    [SerializeField] private Transform anchorPoint;
+    [SerializeField] private string apiEndpoint = "http://10.119.11.41:8081/newposns"; // Change this to your actual endpoint
 
     [System.Serializable]
     public class PrefabData
@@ -25,11 +26,15 @@ public class SavePrefabPositions : MonoBehaviour
         public List<PrefabData> items = new List<PrefabData>();
     }
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+    [DllImport("__Internal")]
+    private static extern void DownloadFileFromUnity(string filename, string text);
+#endif
+
     void Start()
     {
-        saveButton.onClick.AddListener(SavePositionsToJson);
-        
-        // If anchorPoint is not assigned, try to find it automatically
+        saveButton.onClick.AddListener(SavePositionsToAPI);
+
         if (anchorPoint == null)
         {
             GameObject anchorGO = GameObject.Find("AnchorPoint");
@@ -45,7 +50,7 @@ public class SavePrefabPositions : MonoBehaviour
         }
     }
 
-    void SavePositionsToJson()
+    void SavePositionsToAPI()
     {
         if (anchorPoint == null)
         {
@@ -54,18 +59,11 @@ public class SavePrefabPositions : MonoBehaviour
         }
 
         PrefabDataList dataList = new PrefabDataList();
-
-        // Get all child objects from the anchor point
         Transform[] allChildren = anchorPoint.GetComponentsInChildren<Transform>();
 
         foreach (Transform child in allChildren)
         {
-            // Skip the anchor point itself
-            if (child == anchorPoint)
-                continue;
-
-            // Only save direct children of anchor point (not nested children)
-            if (child.parent != anchorPoint)
+            if (child == anchorPoint || child.parent != anchorPoint)
                 continue;
 
             PrefabData data = new PrefabData
@@ -85,49 +83,44 @@ public class SavePrefabPositions : MonoBehaviour
         }
 
         string json = JsonUtility.ToJson(dataList, true);
-        File.WriteAllText(savePath, json);
 
-        Debug.Log($"Saved {dataList.items.Count} prefab positions to:\n{savePath}");
-        
-        // Optional: Print saved prefab names for verification
-        Debug.Log("Saved prefabs: " + string.Join(", ", dataList.items.ConvertAll(x => x.name)));
+#if UNITY_WEBGL && !UNITY_EDITOR
+        DownloadFileFromUnity("saved_prefab_positions.json", json);
+#else
+        string filePath = System.IO.Path.Combine(Application.persistentDataPath, "saved_prefab_positions.json");
+        System.IO.File.WriteAllText(filePath, json);
+        Debug.Log("Saved prefab data locally to: " + filePath);
+#endif
+
+        StartCoroutine(PostJsonToAPI(json));
     }
 
-    // Optional: Method to load positions back (you can call this from another button)
-    public void LoadPositionsFromJson()
+    IEnumerator PostJsonToAPI(string json)
     {
-        if (!File.Exists(savePath))
+        using (UnityWebRequest request = new UnityWebRequest(apiEndpoint, "POST"))
         {
-            Debug.LogWarning("Save file not found at: " + savePath);
-            return;
-        }
+            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
 
-        if (anchorPoint == null)
-        {
-            Debug.LogError("AnchorPoint is not assigned! Cannot load prefab positions.");
-            return;
-        }
+            Debug.Log("Sending prefab data to API...");
+            yield return request.SendWebRequest();
 
-        string json = File.ReadAllText(savePath);
-        PrefabDataList dataList = JsonUtility.FromJson<PrefabDataList>(json);
-
-        foreach (PrefabData data in dataList.items)
-        {
-            // Find the prefab by name under anchor point
-            Transform prefabTransform = anchorPoint.Find(data.name);
-            
-            if (prefabTransform != null)
+#if UNITY_2020_1_OR_NEWER
+            if (request.result == UnityWebRequest.Result.Success)
+#else
+            if (!request.isNetworkError && !request.isHttpError)
+#endif
             {
-                prefabTransform.position = data.position;
-                prefabTransform.eulerAngles = data.rotation;
-                prefabTransform.localScale = data.scale;
+                Debug.Log("Successfully posted prefab data to API.");
+                Debug.Log("Server response: " + request.downloadHandler.text);
             }
             else
             {
-                Debug.LogWarning($"Prefab '{data.name}' not found under AnchorPoint when loading!");
+                Debug.LogError("Failed to post prefab data to API.");
+                Debug.LogError("Error: " + request.error);
             }
         }
-
-        Debug.Log($"Loaded {dataList.items.Count} prefab positions from save file.");
     }
 }
